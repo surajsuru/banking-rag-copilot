@@ -7,11 +7,11 @@
 An AI-powered knowledge copilot for a banking company. Employees ask natural language questions about:
 - Payment processing (UPI, NEFT, RTGS, IMPS)
 - API documentation and integration guides
-- Error codes and troubleshooting
+- Error codes and troubleshooting (100+ standard codes)
 - Transaction reversal procedures
 - KYC / AML compliance policies
-- Incident management runbooks
-- Reconciliation procedures
+- Incident management runbooks & SEV escalation playbooks
+- 3-Way reconciliation procedures
 - Security controls and access policies
 
 The system retrieves relevant context from a knowledge base using RAG and generates grounded answers with citations.
@@ -20,16 +20,16 @@ The system retrieves relevant context from a knowledge base using RAG and genera
 
 ## Why This Project Exists
 
-Most RAG tutorials hide complexity behind LangChain/LlamaIndex. This project builds every component manually so you understand exactly what happens internally:
+Most RAG tutorials hide complexity behind LangChain/LlamaIndex abstractions. This project builds every component manually so you understand exactly what happens internally:
 
-- How documents are loaded, parsed, cleaned
-- How text is split into chunks and why chunk strategy matters
+- How documents are loaded, parsed across 9 formats, and cleaned
+- How text is split into chunks with overlap and why chunk strategy matters
 - How text becomes an embedding vector
-- How vector similarity search works
-- How hybrid retrieval combines semantic + keyword search
+- How vector similarity search works (pgvector / cosine distance)
+- How hybrid retrieval combines semantic + keyword search (BM25)
 - How reranking improves result quality
-- How access control is enforced at retrieval time
-- How answers are grounded and cited
+- How access control (RBAC) is enforced at retrieval time
+- How answers are grounded and cited with source tracking
 
 ---
 
@@ -38,13 +38,13 @@ Most RAG tutorials hide complexity behind LangChain/LlamaIndex. This project bui
 | Layer | Technology |
 |---|---|
 | Language | Python 3.14 |
-| Document Parsing | PyMuPDF, python-docx, BeautifulSoup4, PyYAML |
-| Data Handling | pandas |
-| Vector Database | PostgreSQL + pgvector |
-| Embeddings | sentence-transformers |
-| LLM | Configurable (OpenAI / local) |
-| API | FastAPI |
-| UI | Streamlit |
+| Document Parsing | PyMuPDF, python-docx, BeautifulSoup4, PyYAML, pandas |
+| Data Normalization | unicodedata (NFKC), regex cleaning |
+| Vector Database | PostgreSQL + pgvector (Phase 6+) |
+| Embeddings | sentence-transformers (Phase 5+) |
+| LLM | Configurable (OpenAI / Groq / Local) (Phase 7+) |
+| API | FastAPI (Phase 18+) |
+| UI | Streamlit (Phase 19+) |
 
 ---
 
@@ -55,11 +55,11 @@ banking-rag-copilot/
 |
 +-- data/
 |   +-- raw/              # 40 synthetic banking documents (immutable source of truth)
-|   +-- processed/        # Extracted, cleaned, chunked artifacts
+|   +-- processed/        # Extracted, cleaned, chunked JSON artifacts
 |   +-- evaluation/       # Evaluation datasets and benchmark results
 |
 +-- src/
-|   +-- ingestion/        # File discovery, parsing, cleaning, chunking
+|   +-- ingestion/        # File discovery, parsing, cleaning, chunking & pipeline orchestrator
 |   +-- embeddings/       # Embedding model and vector generation
 |   +-- database/         # PostgreSQL + pgvector schema and storage
 |   +-- retrieval/        # Vector, keyword, hybrid search and reranking
@@ -73,8 +73,8 @@ banking-rag-copilot/
 |   +-- ui.py             # Streamlit UI
 |
 +-- tests/
-+-- config.py
-+-- requirements.txt
++-- config.py             # Central configuration (.env loader)
++-- requirements.txt      # Python dependencies
 +-- docker-compose.yml
 `
 
@@ -82,11 +82,17 @@ banking-rag-copilot/
 
 ## Knowledge Base
 
-40 synthetic banking documents across 9 formats: PDF, DOCX, Markdown, TXT, CSV, JSON, NDJSON, YAML, HTML.
+40 synthetic banking documents across 9 formats:
+- **PDF**: UPI Integration Guide, Error Code Reference, KYC Policy, IMPS Operations Guide, Payment Reconciliation
+- **DOCX**: Account Management, Customer Onboarding, Incident Runbook, Release Notes, Reversal SOP
+- **Markdown**: NEFT/RTGS Guide, API Handbook, KYC/AML Manual, Incident Playbook, Security Framework, Architecture Guide, Error Codes Manual, Release Notes v2/v3
+- **TXT**: Support FAQ, Incident Logs
+- **CSV**: Access Matrix, Document Catalog, Product Pricing Matrix
+- **JSON / NDJSON**: Evaluation Questions, Event Schema, Support Tickets
+- **YAML**: OpenAPI 3.0 Specification
+- **HTML**: Change Management Policy, Data Retention Policy
 
-Topics: UPI/NEFT/RTGS processing, API specs, 100+ error codes, KYC/AML policy, incident management, reconciliation, security controls, release notes.
-
-> data/raw/ is immutable. Never modify files inside it.
+> data/raw/ is the immutable source of truth. Never modify files inside it.
 
 ---
 
@@ -94,41 +100,44 @@ Topics: UPI/NEFT/RTGS processing, API specs, 100+ error codes, KYC/AML policy, i
 
 | Phase | Status | Description |
 |---|---|---|
-| 1 - Foundation | Done | Project structure, venv, config, logging |
-| 2 - Ingestion | In Progress | Loader, parser (9 formats), cleaner |
-| 3 - Chunking | Pending | Fixed, token-based, heading-aware |
-| 4 - Embeddings | Pending | Embedding model, vector generation |
-| 5 - Vector Storage | Pending | PostgreSQL + pgvector |
-| 6 - Naive RAG | Pending | First end-to-end pipeline |
-| 7 - Citations | Pending | Source tracking and grounded answers |
-| 8 - Hybrid Retrieval | Pending | BM25 + vector search |
-| 9 - Reranking | Pending | Cross-encoder reranking |
-| 10 - Access Control | Pending | Role-based document filtering |
-| 11 - Evaluation | Pending | Retrieval and generation metrics |
-| 12 - API and UI | Pending | FastAPI + Streamlit |
+| 1 - Foundation | ✅ Done | Project structure, venv, config, logging, git setup |
+| 2 - Ingestion | ✅ Done | Loader, 9-format parsers, cleaner, chunker, pipeline runner (259 chunks generated) |
+| 3 - Chunking Benchmarks | ⏳ Next | Token-based & heading-aware chunking comparisons |
+| 4 - Embeddings | ⏳ Pending | Dense vector representations & similarity math |
+| 5 - Vector Storage | ⏳ Pending | PostgreSQL + pgvector schema & indexing |
+| 6 - Naive RAG | ⏳ Pending | First complete end-to-end question-answering pipeline |
+| 7 - Citations & Grounding | ⏳ Pending | Source tracking & hallucination prevention |
+| 8 - Hybrid Retrieval | ⏳ Pending | BM25 keyword search + vector search |
+| 9 - Reranking | ⏳ Pending | Cross-encoder candidate reranking |
+| 10 - Access Control | ⏳ Pending | Role-based document filtering |
+| 11 - Evaluation | ⏳ Pending | Precision@K, Recall@K, MRR, Answer Relevancy |
+| 12 - API & UI | ⏳ Pending | FastAPI REST endpoints + Streamlit UI |
 
 ---
 
-## Setup
+## Quickstart
 
 `ash
-git clone https://github.com/YOUR_USERNAME/banking-rag-copilot.git
+# 1. Clone repository
+git clone https://github.com/surajsuru/banking-rag-copilot.git
 cd banking-rag-copilot
+
+# 2. Set up virtual environment
 python -m venv venv
-venv/Scripts/activate
+venv\Scripts\Activate.ps1   # Windows PowerShell
+
+# 3. Install dependencies
 pip install -r requirements.txt
+
+# 4. Configure environment variables
 cp .env.example .env
+
+# 5. Run the Ingestion Pipeline
+python -m src.ingestion.pipeline
 `
-
----
-
-## Data Notice
-
-All documents in data/raw/ are synthetic, created for learning purposes only.
-They do not represent actual proprietary banking documentation.
 
 ---
 
 ## License
 
-MIT License. For educational and portfolio use only.
+MIT License. For educational and portfolio use.
