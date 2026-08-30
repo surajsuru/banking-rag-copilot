@@ -1,0 +1,22 @@
+BANKING SUPPORT FAQ | Version 2.6
+
+Q: A customer says money was debited but the beneficiary did not receive it. What should I check first?
+A: Identify transaction ID, determine ledger state, inspect external response state, then check reconciliation evidence. Do not infer failure from customer-visible non-receipt.
+
+Q: What does TXN-1042 mean?
+A: Beneficiary validation is incomplete. Inspect the beneficiary validation response and avoid blind retries.
+
+Q: What is the difference between 401 and 403?
+A: 401 is an authentication failure. 403 means the credential was accepted but the required scope is missing.
+
+Q: Can support agents access restricted security incident logs?
+A: No. Use the access matrix. Support agents have public and operations access.
+
+Q: Should I reverse immediately after a gateway timeout?
+A: No. Establish whether the external result is known. Use reconciliation for unknown outcomes.
+
+Q: Which API returns account balance?
+A: GET /v1/accounts/{accountId}/balance.
+
+Q: What if the answer is not in the knowledge base?
+A: State that there is insufficient evidence rather than inventing a policy.

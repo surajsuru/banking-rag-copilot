@@ -1,0 +1,46 @@
+openapi: 3.0.3
+info:
+  title: NexusCore Banking API
+  version: "3.1"
+paths:
+  /v1/accounts/{accountId}/balance:
+    get:
+      summary: Get account balance
+      security:
+        - bearerAuth: [account.read]
+      responses:
+        "200":
+          description: Balance returned
+  /v1/transactions:
+    post:
+      summary: Create transaction
+      security:
+        - bearerAuth: [transaction.write]
+      responses:
+        "202":
+          description: Accepted for processing
+        "409":
+          description: Idempotency conflict
+  /v1/transactions/{transactionId}/reverse:
+    post:
+      summary: Request transaction reversal
+      security:
+        - bearerAuth: [transaction.reverse]
+      responses:
+        "202":
+          description: Reversal accepted
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    BalanceResponse:
+      type: object
+      required: [accountId, ledgerBalance, availableBalance, currency]
+      properties:
+        accountId: {type: string}
+        ledgerBalance: {type: number}
+        availableBalance: {type: number}
+        currency: {type: string, example: INR}

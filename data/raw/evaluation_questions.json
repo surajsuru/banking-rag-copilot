@@ -1,0 +1,133 @@
+{
+  "dataset_name": "banking-rag-copilot-eval-v1",
+  "created": "2026-08-30",
+  "questions": [
+    {
+      "id": "Q001",
+      "question": "What does error TXN-1042 mean?",
+      "expected_sources": [
+        "error_code_reference.pdf"
+      ],
+      "answer_type": "direct"
+    },
+    {
+      "id": "Q002",
+      "question": "What steps should an operator follow to reverse a transaction that was debited but not credited?",
+      "expected_sources": [
+        "transaction_reversal_sop.docx",
+        "transaction_processing.md"
+      ],
+      "answer_type": "multi_document"
+    },
+    {
+      "id": "Q003",
+      "question": "Which API endpoint retrieves an account balance?",
+      "expected_sources": [
+        "api_openapi.yaml",
+        "api_authentication.md"
+      ],
+      "answer_type": "direct"
+    },
+    {
+      "id": "Q004",
+      "question": "What is the fictional bank standard response target for a Sev-1 payment incident?",
+      "expected_sources": [
+        "sla_policy.md"
+      ],
+      "answer_type": "direct"
+    },
+    {
+      "id": "Q005",
+      "question": "Which roles can access restricted incident records?",
+      "expected_sources": [
+        "access_matrix.csv"
+      ],
+      "answer_type": "metadata"
+    },
+    {
+      "id": "Q006",
+      "question": "A UPI payment has a successful switch response but the ledger was not updated. What should be checked next?",
+      "expected_sources": [
+        "upi_integration_guide.pdf",
+        "payment_reconciliation.pdf",
+        "incident_response_runbook.docx"
+      ],
+      "answer_type": "multi_document"
+    },
+    {
+      "id": "Q007",
+      "question": "What changed in release 2026.08 that affects transaction timeout behavior?",
+      "expected_sources": [
+        "release_notes.docx",
+        "transaction_processing.md"
+      ],
+      "answer_type": "versioned"
+    },
+    {
+      "id": "Q008",
+      "question": "What does IMPS availability mean publicly, and what fictional bank-specific queue behavior should operations know?",
+      "expected_sources": [
+        "imps_operations_guide.pdf",
+        "source_register.md"
+      ],
+      "answer_type": "multi_document"
+    },
+    {
+      "id": "Q009",
+      "question": "What fields are required to publish a TransactionPosted event?",
+      "expected_sources": [
+        "transaction_event_schema.json"
+      ],
+      "answer_type": "structured"
+    },
+    {
+      "id": "Q010",
+      "question": "What should the assistant say when asked for the employee salary revision policy?",
+      "expected_sources": [],
+      "answer_type": "abstain"
+    },
+    {
+      "id": "Q011",
+      "question": "What customer evidence is required for a medium-risk individual onboarding case in the synthetic policy?",
+      "expected_sources": [
+        "customer_onboarding.docx",
+        "kyc_policy.pdf"
+      ],
+      "answer_type": "multi_document"
+    },
+    {
+      "id": "Q012",
+      "question": "Which security control addresses storing payment secrets in client-side hidden fields?",
+      "expected_sources": [
+        "digital_payment_security.pdf"
+      ],
+      "answer_type": "direct"
+    },
+    {
+      "id": "Q013",
+      "question": "What changed between the retired v3.1 and current v3.2 transaction reversal workflow?",
+      "expected_sources": [
+        "transaction_reversal_sop.docx"
+      ],
+      "answer_type": "versioned"
+    },
+    {
+      "id": "Q014",
+      "question": "Find incidents where ERR-GW-07 appears and summarize common symptoms.",
+      "expected_sources": [
+        "sample_incident_logs.txt",
+        "error_code_reference.pdf"
+      ],
+      "answer_type": "log_reasoning"
+    },
+    {
+      "id": "Q015",
+      "question": "What is the maximum IMPS transaction limit stated on the public NPCI reference page?",
+      "expected_sources": [
+        "source_register.md",
+        "imps_operations_guide.pdf"
+      ],
+      "answer_type": "public_reference"
+    }
+  ]
+}

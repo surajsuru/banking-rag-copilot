@@ -1,0 +1,8 @@
+product,channel,monthly_fee,txn_fee,limit_inr
+Everyday Savings,Branch,0,0,200000
+Everyday Savings,Digital,0,0,200000
+Business Current,API,499,2.50,1000000
+Business Current,Branch,499,5.00,1000000
+Instant Transfer,UPI,0,0,500000
+Instant Transfer,IMPS,0,3.00,500000
+Payroll Connect,API,1499,1.25,5000000

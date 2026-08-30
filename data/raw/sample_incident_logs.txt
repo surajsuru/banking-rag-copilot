@@ -1,0 +1,16 @@
+2026-08-21T09:12:04.113Z INFO payment-gateway correlation=CORR-7F21 txn=TXN-884212 event=SUBMITTED
+2026-08-21T09:12:05.021Z WARN payment-gateway correlation=CORR-7F21 txn=TXN-884212 code=ERR-GW-07 msg="connection reset before response"
+2026-08-21T09:12:05.024Z INFO transaction-service correlation=CORR-7F21 txn=TXN-884212 state=PENDING_EXTERNAL_RESULT
+2026-08-21T09:13:15.840Z INFO reconciliation-worker correlation=CORR-7F21 txn=TXN-884212 result=UNKNOWN
+2026-08-21T09:18:31.220Z INFO reconciliation-worker correlation=CORR-7F21 txn=TXN-884212 settlement_ref=SET-55182 result=FOUND
+2026-08-21T09:18:31.229Z INFO ledger-service correlation=CORR-7F21 txn=TXN-884212 action=POST amount=12500 currency=INR
+2026-08-21T09:18:31.244Z INFO transaction-service correlation=CORR-7F21 txn=TXN-884212 state=LEDGER_POSTED
+
+2026-08-21T10:02:11.900Z INFO payment-gateway correlation=CORR-8A19 txn=TXN-884903 event=SUBMITTED
+2026-08-21T10:02:12.441Z WARN payment-gateway correlation=CORR-8A19 txn=TXN-884903 code=GW-3007 msg="external switch timeout"
+2026-08-21T10:02:12.448Z INFO transaction-service correlation=CORR-8A19 txn=TXN-884903 state=PENDING_EXTERNAL_RESULT
+2026-08-21T10:09:44.010Z INFO reconciliation-worker correlation=CORR-8A19 txn=TXN-884903 result=FAILED
+2026-08-21T10:09:44.022Z INFO transaction-service correlation=CORR-8A19 txn=TXN-884903 state=FAILED
+
+2026-08-21T11:22:33.770Z ERROR ledger-service correlation=CORR-8B72 txn=TXN-885011 code=TXN-2031 msg="ledger database unavailable"
+2026-08-21T11:22:33.771Z INFO transaction-service correlation=CORR-8B72 txn=TXN-885011 state=LEDGER_POST_RETRY

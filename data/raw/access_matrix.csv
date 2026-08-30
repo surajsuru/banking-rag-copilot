@@ -1,0 +1,9 @@
+role,allowed_levels,description
+viewer,public,Public material only.
+support_agent,"public,operations",Customer-facing troubleshooting and operational FAQs.
+operations_engineer,"public,operations,restricted","Runbooks, incident evidence and operational controls."
+developer,"public,developer",API and engineering material.
+compliance_officer,"public,compliance,restricted",Compliance and restricted controls.
+finance_analyst,"public,finance",Reconciliation and finance material.
+product_manager,"public,product",Product/pricing material.
+admin,"public,operations,developer,compliance,restricted,finance,product",Full controlled access.

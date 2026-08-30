@@ -1,0 +1,14 @@
+# -- Document Parsing --
+PyMuPDF==1.25.5          # PDF extraction (import as fitz)
+python-docx==1.1.2       # DOCX extraction
+beautifulsoup4==4.12.3   # HTML extraction
+lxml==6.1.2              # HTML/XML parser backend for BeautifulSoup
+PyYAML==6.0.3            # YAML extraction
+Markdown==3.7            # Markdown to HTML conversion
+
+# -- Data Handling --
+pandas==3.0.5            # CSV / structured data handling
+
+# -- Utilities --
+python-dotenv==1.0.1     # Load .env environment variables
+tqdm==4.67.1             # Progress bars during ingestion
