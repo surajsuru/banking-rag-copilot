@@ -23,9 +23,10 @@ The system retrieves relevant context from a knowledge base using RAG and genera
 Most RAG tutorials hide complexity behind LangChain/LlamaIndex abstractions. This project builds every component manually so you understand exactly what happens internally:
 
 - How documents are loaded, parsed across 9 formats, and cleaned
-- How text is split into chunks with overlap and why chunk strategy matters
-- How text becomes an embedding vector
-- How vector similarity search works (pgvector / cosine distance)
+- How text is split into chunks (fixed sliding window vs. heading-aware structure chunking)
+- How text becomes a dense embedding vector (384-dim sentence-transformers)
+- How vector similarity search works (cosine similarity, dot product, L2 normalization)
+- How vector databases (pgvector) store and index high-dimensional vectors
 - How hybrid retrieval combines semantic + keyword search (BM25)
 - How reranking improves result quality
 - How access control (RBAC) is enforced at retrieval time
@@ -40,8 +41,8 @@ Most RAG tutorials hide complexity behind LangChain/LlamaIndex abstractions. Thi
 | Language | Python 3.14 |
 | Document Parsing | PyMuPDF, python-docx, BeautifulSoup4, PyYAML, pandas |
 | Data Normalization | unicodedata (NFKC), regex cleaning |
+| Embeddings | sentence-transformers/all-MiniLM-L6-v2 (384 dims, L2 normalized) |
 | Vector Database | PostgreSQL + pgvector (Phase 6+) |
-| Embeddings | sentence-transformers (Phase 5+) |
 | LLM | Configurable (OpenAI / Groq / Local) (Phase 7+) |
 | API | FastAPI (Phase 18+) |
 | UI | Streamlit (Phase 19+) |
@@ -59,8 +60,8 @@ banking-rag-copilot/
 |   +-- evaluation/       # Evaluation datasets and benchmark results
 |
 +-- src/
-|   +-- ingestion/        # File discovery, parsing, cleaning, chunking & pipeline orchestrator
-|   +-- embeddings/       # Embedding model and vector generation
+|   +-- ingestion/        # Discovery, parser (9 formats), cleaner, chunker (fixed & heading-aware)
+|   +-- embeddings/       # Embedding model, batching, normalization & similarity math
 |   +-- database/         # PostgreSQL + pgvector schema and storage
 |   +-- retrieval/        # Vector, keyword, hybrid search and reranking
 |   +-- generation/       # Prompt construction and LLM interaction
@@ -101,10 +102,10 @@ banking-rag-copilot/
 | Phase | Status | Description |
 |---|---|---|
 | 1 - Foundation | ✅ Done | Project structure, venv, config, logging, git setup |
-| 2 - Ingestion | ✅ Done | Loader, 9-format parsers, cleaner, chunker, pipeline runner (259 chunks generated) |
-| 3 - Chunking Benchmarks | ⏳ Next | Token-based & heading-aware chunking comparisons |
-| 4 - Embeddings | ⏳ Pending | Dense vector representations & similarity math |
-| 5 - Vector Storage | ⏳ Pending | PostgreSQL + pgvector schema & indexing |
+| 2 - Ingestion | ✅ Done | Loader, 9-format parsers, cleaner, chunker, pipeline runner (259 chunks) |
+| 3 - Advanced Chunking | ✅ Done | Heading-aware structure chunking & strategy comparison |
+| 4 - Embeddings Engine | ✅ Done | Embedder class with ll-MiniLM-L6-v2, batching, L2 normalization, cosine similarity |
+| 5 - Vector Storage | ⏳ Next | PostgreSQL + pgvector setup, schema design, batch insertion |
 | 6 - Naive RAG | ⏳ Pending | First complete end-to-end question-answering pipeline |
 | 7 - Citations & Grounding | ⏳ Pending | Source tracking & hallucination prevention |
 | 8 - Hybrid Retrieval | ⏳ Pending | BM25 keyword search + vector search |
