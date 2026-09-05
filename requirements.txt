@@ -12,3 +12,12 @@ pandas==3.0.5            # CSV / structured data handling
 # -- Utilities --
 python-dotenv==1.0.1     # Load .env environment variables
 tqdm==4.67.1             # Progress bars during ingestion
+
+
+# -- Database --
+psycopg2-binary==2.9.10  # PostgreSQL driver (binary = no build tools needed)
+pgvector==0.5.0          # pgvector Python adapter for vector type support
+
+# -- Embeddings --
+sentence-transformers==3.4.1  # Local embedding models (all-MiniLM-L6-v2)
+numpy==2.2.4                  # Numerical operations (cosine similarity, vector math)

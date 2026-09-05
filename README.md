@@ -118,7 +118,7 @@ banking-rag-copilot/
 
 ## Quickstart
 
-`ash
+```bash
 # 1. Clone repository
 git clone https://github.com/surajsuru/banking-rag-copilot.git
 cd banking-rag-copilot
@@ -133,9 +133,23 @@ pip install -r requirements.txt
 # 4. Configure environment variables
 cp .env.example .env
 
-# 5. Run the Ingestion Pipeline
+# 5. Initialize PostgreSQL database & pgvector extension
+python scripts/create_db.py
+python scripts/test_connection.py
+
+# 6. Run the Ingestion Pipeline
 python -m src.ingestion.pipeline
-`
+```
+
+---
+
+## Troubleshooting & Engineering Log
+
+Encountered issues during setup or development? See our comprehensive [Troubleshooting & Problems Faced Log](TROUBLESHOOTING.md) detailing:
+- Installing `pgvector` on Windows with PostgreSQL 18
+- Fixing MSVC compilation errors (`vacuum_delay_point` API change in PostgreSQL 18)
+- Database auto-creation and connection resolution
+- Python path bootstrapping for standalone scripts
 
 ---
 

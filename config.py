@@ -28,3 +28,12 @@ LOG_FORMAT = os.getenv(
     "LOG_FORMAT",
     "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 )
+
+# ── Database Configuration ─────────────────────────────────────────
+DB_HOST     = os.getenv("DB_HOST", "localhost")
+DB_PORT     = int(os.getenv("DB_PORT", "5432"))
+DB_NAME     = os.getenv("DB_NAME", "banking_rag")
+DB_USER     = os.getenv("DB_USER", "postgres")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+
+
