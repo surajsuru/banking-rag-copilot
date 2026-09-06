@@ -21,3 +21,5 @@ pgvector==0.5.0          # pgvector Python adapter for vector type support
 # -- Embeddings --
 sentence-transformers==3.4.1  # Local embedding models (all-MiniLM-L6-v2)
 numpy                  # Numerical operations (cosine similarity, vector math)
+
+groq

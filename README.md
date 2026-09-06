@@ -106,8 +106,8 @@ banking-rag-copilot/
 | 3 - Advanced Chunking | ✅ Done | Heading-aware structure chunking & strategy comparison |
 | 4 - Embeddings Engine | ✅ Done | Embedder class with all-MiniLM-L6-v2, batching, L2 normalization, cosine similarity |
 | 5 - Vector Storage | ✅ Done | PostgreSQL + pgvector setup, schema design, batch insertion (259 chunks) |
-| 6 - Naive RAG | ⏳ Next | First complete end-to-end question-answering pipeline |
-| 7 - Citations & Grounding | ⏳ Pending | Source tracking & hallucination prevention |
+| 6 - Naive RAG | ✅ Done | First complete end-to-end question-answering pipeline (Groq + pgvector) |
+| 7 - Citations & Grounding | ⏳ Next | Source tracking & hallucination prevention |
 | 8 - Hybrid Retrieval | ⏳ Pending | BM25 keyword search + vector search |
 | 9 - Reranking | ⏳ Pending | Cross-encoder candidate reranking |
 | 10 - Access Control | ⏳ Pending | Role-based document filtering |
