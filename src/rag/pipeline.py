@@ -11,6 +11,8 @@ from src.logger import get_logger
 from src.retrieval.vector_search import VectorSearcher
 from src.generation.prompt import build_prompt
 from src.generation.llm import GroqLLM
+from src.rag.citations import extract_citations, verify_grounding
+
 
 logger = get_logger(__name__)
 
@@ -78,12 +80,21 @@ class NaiveRAGPipeline:
         raw_answer = self.llm.generate(messages)
         answer = raw_answer.replace("\r\n", "\n").replace("\r", "\n").strip()
 
+        # 4. CITATIONS: Parse [Source: ...] markers from the answer
+        citations = extract_citations(answer, chunks)
+
+        # 5. GROUNDING: Verify how much of the answer is backed by documents
+        grounding = verify_grounding(answer, chunks)
+
         return {
-            "question": question,
-            "answer": answer,
-            "sources": unique_sources,
-            "chunks": chunks
+            "question":   question,
+            "answer":     answer,
+            "sources":    unique_sources,
+            "chunks":     chunks,
+            "citations":  citations,
+            "grounding":  grounding,
         }
+
 
     def close(self):
         """Closes the vector searcher database connection."""
@@ -104,8 +115,24 @@ if __name__ == "__main__":
 
     print("\nANSWER:")
     print(result["answer"])
+
     print("\n" + "-" * 70)
     print("SOURCES CITED:", ", ".join(result["sources"]))
+
+    print("\n" + "-" * 70)
+    g = result["grounding"]
+    print(f"GROUNDING SCORE: {g['score']:.3f} | Grounded: {g['is_grounded']}")
+    if g["unsupported_sentences"]:
+        print(f"⚠ {len(g['unsupported_sentences'])} sentence(s) not fully backed by documents:")
+        for s in g["unsupported_sentences"]:
+            print(f"  → {s[:120]}")
+
+    print("\n" + "-" * 70)
+    print(f"CITATIONS ({len(result['citations'])} found):")
+    for c in result["citations"]:
+        score = f"{c['similarity_score']:.4f}" if c['similarity_score'] else "N/A"
+        print(f"  [{score}] {c['source_file']} (Chunk #{c['chunk_index']})")
     print("=" * 70 + "\n")
+
 
     rag.close()

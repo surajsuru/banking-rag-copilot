@@ -107,8 +107,8 @@ banking-rag-copilot/
 | 4 - Embeddings Engine | ✅ Done | Embedder class with all-MiniLM-L6-v2, batching, L2 normalization, cosine similarity |
 | 5 - Vector Storage | ✅ Done | PostgreSQL + pgvector setup, schema design, batch insertion (259 chunks) |
 | 6 - Naive RAG | ✅ Done | First complete end-to-end question-answering pipeline (Groq + pgvector) |
-| 7 - Citations & Grounding | ⏳ Next | Source tracking & hallucination prevention |
-| 8 - Hybrid Retrieval | ⏳ Pending | BM25 keyword search + vector search |
+| 7 - Citations & Grounding | ✅ Done | Citation extractor, token-overlap grounding score, unsupported sentence detection |
+| 8 - Hybrid Retrieval | ⏳ Next | BM25 keyword search + vector search |
 | 9 - Reranking | ⏳ Pending | Cross-encoder candidate reranking |
 | 10 - Access Control | ⏳ Pending | Role-based document filtering |
 | 11 - Evaluation | ⏳ Pending | Precision@K, Recall@K, MRR, Answer Relevancy |
