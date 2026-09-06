@@ -11,6 +11,19 @@ from dotenv import load_dotenv
 # Load .env file from project root into os.environ
 load_dotenv()
 
+# ── Windows DLL Loading ─────────────────────────────────────────────
+# In Python 3.8+ on Windows, DLLs required by C extensions (such as libpq.dll for psycopg2)
+# are not loaded from PATH. They must be registered via os.add_dll_directory.
+import sys
+if sys.platform == "win32":
+    pg_bin = os.getenv("PG_BIN_DIR", r"C:\Program Files\PostgreSQL\18\bin")
+    if os.path.exists(pg_bin):
+        try:
+            os.add_dll_directory(pg_bin)
+        except (AttributeError, OSError):
+            pass
+
+
 # ── Project Root ────────────────────────────────────────────────────
 # Path(__file__).parent gives us the folder containing this file
 # which is the project root (banking-rag-copilot/)

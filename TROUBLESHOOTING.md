@@ -9,6 +9,7 @@ This document tracks all real-world technical hurdles, compatibility issues, alt
 2. [Issue 2: pgvector Compilation Error on PostgreSQL 18 (`vacuum_delay_point`)](#issue-2-pgvector-compilation-error-on-postgresql-18-vacuum_delay_point)
 3. [Issue 3: Database `banking_rag` Does Not Exist](#issue-3-database-banking_rag-does-not-exist)
 4. [Issue 4: Standalone Python Scripts Failing with `ModuleNotFoundError: No module named 'src'`](#issue-4-standalone-python-scripts-failing-with-modulenotfounderror-no-module-named-src)
+5. [Issue 5: `ImportError: DLL load failed while importing _psycopg` on Windows](#issue-5-importerror-dll-load-failed-while-importing-_psycopg-on-windows)
 
 ---
 
@@ -153,3 +154,32 @@ Two solutions implemented:
    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
    ```
    Now both execution methods work seamlessly.
+
+---
+
+## Issue 5: `ImportError: DLL load failed while importing _psycopg` on Windows
+
+### 1. Problem Description
+When importing `psycopg2` after installing dependencies on Windows with Python 3.8+:
+```text
+ImportError: DLL load failed while importing _psycopg: The specified module could not be found.
+```
+
+### 2. Root Cause Analysis
+`psycopg2` is a C extension (`_psycopg.pyd`) that depends on `libpq.dll` (PostgreSQL's client C-library) along with OpenSSL libraries located in `C:\Program Files\PostgreSQL\18\bin`.
+
+Starting with Python 3.8 on Windows, Python **no longer uses the system `PATH` environment variable** to search for dependent DLLs when loading C extensions. Therefore, even if PostgreSQL's `bin` folder is on the PATH, Windows blocks `_psycopg` from loading `libpq.dll` unless explicitly registered.
+
+### 3. Solution
+In [`config.py`](file:///c:/AI%20ML%20Engineer%20path/banking-rag-copilot/config.py), we register the PostgreSQL DLL directory on Windows using `os.add_dll_directory`:
+```python
+import sys
+if sys.platform == "win32":
+    pg_bin = os.getenv("PG_BIN_DIR", r"C:\Program Files\PostgreSQL\18\bin")
+    if os.path.exists(pg_bin):
+        try:
+            os.add_dll_directory(pg_bin)
+        except (AttributeError, OSError):
+            pass
+```
+By importing `config` before `psycopg2`, Windows registers the DLL directory and `import psycopg2` succeeds across all scripts.

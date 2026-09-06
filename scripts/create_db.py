@@ -4,10 +4,13 @@ create_db.py
 Run this ONCE to create the banking_rag PostgreSQL database.
 Usage: python scripts/create_db.py
 """
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from config import DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from config import DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
 
 print(f"Connecting to PostgreSQL at {DB_HOST}:{DB_PORT} as user '{DB_USER}'...")
 

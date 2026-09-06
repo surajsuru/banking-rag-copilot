@@ -11,12 +11,13 @@ Simple interface for storing and searching chunks in PostgreSQL + pgvector.
 """
 
 import json
-import psycopg2
 from typing import List, Dict, Any
+
+from config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
+import psycopg2
 
 from src.logger import get_logger
 from src.database.models import create_tables
-from config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
 
 logger = get_logger(__name__)
 
