@@ -108,8 +108,8 @@ banking-rag-copilot/
 | 5 - Vector Storage | ✅ Done | PostgreSQL + pgvector setup, schema design, batch insertion (259 chunks) |
 | 6 - Naive RAG | ✅ Done | First complete end-to-end question-answering pipeline (Groq + pgvector) |
 | 7 - Citations & Grounding | ✅ Done | Citation extractor, token-overlap grounding score, unsupported sentence detection |
-| 8 - Hybrid Retrieval | ⏳ Next | BM25 keyword search + vector search |
-| 9 - Reranking | ⏳ Pending | Cross-encoder candidate reranking |
+| 8 - Hybrid Retrieval | ✅ Done | BM25 + vector search with Reciprocal Rank Fusion (RRF), rank-bm25 |
+| 9 - Reranking | ⏳ Next | Cross-encoder candidate reranking |
 | 10 - Access Control | ⏳ Pending | Role-based document filtering |
 | 11 - Evaluation | ⏳ Pending | Precision@K, Recall@K, MRR, Answer Relevancy |
 | 12 - API & UI | ⏳ Pending | FastAPI REST endpoints + Streamlit UI |

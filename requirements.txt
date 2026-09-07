@@ -23,3 +23,4 @@ sentence-transformers==3.4.1  # Local embedding models (all-MiniLM-L6-v2)
 numpy                  # Numerical operations (cosine similarity, vector math)
 
 groq
+rank-bm25==0.2.2

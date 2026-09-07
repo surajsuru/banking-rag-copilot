@@ -8,7 +8,7 @@ Coordinates retrieval from pgvector, prompt construction, and generation via Gro
 from typing import List, Dict, Any, Optional
 
 from src.logger import get_logger
-from src.retrieval.vector_search import VectorSearcher
+from src.retrieval.hybrid_search import HybridSearcher
 from src.generation.prompt import build_prompt
 from src.generation.llm import GroqLLM
 from src.rag.citations import extract_citations, verify_grounding
@@ -25,20 +25,20 @@ class NaiveRAGPipeline:
 
     def __init__(
         self,
-        searcher: Optional[VectorSearcher] = None,
+        searcher: Optional[HybridSearcher] = None,
         llm: Optional[GroqLLM] = None,
         top_k: int = 3
     ):
         """
         Args:
-            searcher: VectorSearcher instance (defaults to a new one).
+            searcher: HybridSearcher instance (defaults to a new one).
             llm: GroqLLM instance (defaults to a new one).
             top_k: Number of document chunks to retrieve per question.
         """
-        self.searcher = searcher or VectorSearcher(top_k=top_k)
-        self.llm = llm or GroqLLM()
         self.top_k = top_k
-        logger.info(f"NaiveRAGPipeline initialized (top_k={self.top_k})")
+        self.searcher = HybridSearcher(top_k=self.top_k)
+        self.llm = llm or GroqLLM()
+        logger.info(f"NaiveRAGPipeline initialized with HybridSearcher (top_k={self.top_k})")
 
     def ask(self, question: str, top_k: Optional[int] = None) -> Dict[str, Any]:
         """
@@ -59,7 +59,7 @@ class NaiveRAGPipeline:
         logger.info(f"Processing question: '{question}' (top_k={k})")
 
         # 1. RETRIEVAL: Query pgvector for semantically relevant chunks
-        chunks = self.searcher.search(question, top_k=k)
+        chunks = self.searcher.search(question)
 
         if not chunks:
             logger.warning("No relevant chunks retrieved from database.")
