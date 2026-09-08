@@ -40,7 +40,7 @@ class VectorSearcher:
             self._conn = connect()
         return self._conn
 
-    def search(self, query: str, top_k: Optional[int] = None) -> List[Dict[str, Any]]:
+    def search(self, query: str, top_k: Optional[int] = None, allowed_levels: Optional[List[str]] = None) -> List[Dict[str, Any]]:
         """
         Retrieves top_k most similar chunks for a given natural language query.
 
@@ -61,13 +61,14 @@ class VectorSearcher:
             return []
 
         k = top_k or self.top_k
+        levels = allowed_levels or ["public"]
         logger.info(f"Searching for: '{query}' (top_k={k})")
 
         # 1. Convert user text query into a 384-dimensional vector
         query_vector = self.embedder.embed_text(query)
 
         # 2. Query pgvector using cosine distance
-        raw_results = search(self.conn, query_vector, top_k=k)
+        raw_results = search(self.conn, query_vector, top_k=k, allowed_levels=levels)
 
         # 3. Filter by minimum similarity threshold if configured
         filtered_results = [

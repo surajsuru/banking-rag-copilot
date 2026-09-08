@@ -35,6 +35,7 @@ from src.retrieval.vector_search import VectorSearcher
 from src.retrieval.bm25_search import BM25Searcher
 from src.retrieval.reranker import Reranker
 from src.logger import get_logger
+from src.security.access_control import get_allowed_access_levels
 
 logger = get_logger(__name__)
 
@@ -104,7 +105,7 @@ class HybridSearcher:
         searcher.close()
     """
 
-    def __init__(self, top_k: int = 5):
+    def __init__(self, top_k: int = 5, role: str = "public"):
         """
         Initializes the hybrid searcher.
         Loads all chunks from PostgreSQL for BM25 indexing.
@@ -113,6 +114,9 @@ class HybridSearcher:
             top_k: Number of final merged results to return.
         """
         self.top_k = top_k
+        self.role = role
+        self.allowed_levels = get_allowed_access_levels(role)
+        
 
         # Vector searcher: handles PostgreSQL connection and pgvector queries
         self.vector_searcher = VectorSearcher()
@@ -139,7 +143,8 @@ class HybridSearcher:
         conn = self.vector_searcher.conn
         with conn.cursor() as cursor:
             cursor.execute(
-                "SELECT chunk_id, text, source_file, chunk_index FROM chunks ORDER BY chunk_id"
+                "SELECT chunk_id, text, source_file, chunk_index FROM chunks WHERE access_level = ANY(%s) ORDER BY chunk_id",
+                (self.allowed_levels,)
             )
             rows = cursor.fetchall()
 
@@ -177,7 +182,7 @@ class HybridSearcher:
         candidate_k = max(self.top_k * 3, 10)
 
         # --- Run Vector Search ---
-        vector_results = self.vector_searcher.search(query, top_k=candidate_k)
+        vector_results = self.vector_searcher.search(query, top_k=candidate_k, allowed_levels=self.allowed_levels)
         logger.info(f"Vector search returned {len(vector_results)} candidates.")
 
         # --- Run BM25 Search ---

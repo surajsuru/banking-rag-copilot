@@ -39,6 +39,10 @@ CREATE TABLE IF NOT EXISTS chunks (
     -- This is what makes semantic search possible
     embedding     vector(384),
 
+    -- Role-based access control level for this chunk
+    -- Values: 'public', 'operations', 'internal', 'confidential'
+    access_level  TEXT DEFAULT 'public',
+
     -- When this chunk was inserted
     created_at    TIMESTAMP DEFAULT NOW()
 );

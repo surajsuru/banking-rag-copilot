@@ -27,7 +27,8 @@ class NaiveRAGPipeline:
         self,
         searcher: Optional[HybridSearcher] = None,
         llm: Optional[GroqLLM] = None,
-        top_k: int = 3
+        top_k: int = 3,
+        role: str = "public"
     ):
         """
         Args:
@@ -36,7 +37,8 @@ class NaiveRAGPipeline:
             top_k: Number of document chunks to retrieve per question.
         """
         self.top_k = top_k
-        self.searcher = HybridSearcher(top_k=self.top_k)
+        self.role = role
+        self.searcher = HybridSearcher(top_k=self.top_k, role=self.role)
         self.llm = llm or GroqLLM()
         logger.info(f"NaiveRAGPipeline initialized with HybridSearcher (top_k={self.top_k})")
 
@@ -104,7 +106,7 @@ class NaiveRAGPipeline:
 
 if __name__ == "__main__":
     # Quick CLI test run
-    rag = NaiveRAGPipeline(top_k=2)
+    rag = NaiveRAGPipeline(top_k=2, role="operations")
 
     test_question = "What is the procedure to reverse a failed IMPS transaction?"
     print("\n" + "=" * 70)

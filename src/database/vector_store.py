@@ -100,7 +100,8 @@ def save_chunks(conn, chunks: List[Dict[str, Any]], batch_size: int = 100) -> in
 def search(
     conn,
     query_embedding: List[float],
-    top_k: int = 5
+    top_k: int = 5,
+    allowed_levels = ["public"]
 ) -> List[Dict[str, Any]]:
     """
     Finds the top_k most semantically similar chunks to a query vector.
@@ -117,15 +118,17 @@ def search(
             chunk_index,
             1 - (embedding <=> %s::vector) AS similarity
         FROM chunks
+        WHERE access_level = ANY(%s)
         ORDER BY embedding <=> %s::vector
         LIMIT %s;
+
     """
 
     # Convert list to PostgreSQL vector string format
     embedding_str = "[" + ",".join(str(v) for v in query_embedding) + "]"
 
     with conn.cursor() as cursor:
-        cursor.execute(SEARCH_SQL, (embedding_str, embedding_str, top_k))
+        cursor.execute(SEARCH_SQL, (embedding_str, allowed_levels, embedding_str, top_k))
         rows = cursor.fetchall()
 
     results = []
