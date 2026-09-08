@@ -33,6 +33,7 @@ from typing import List, Dict, Any
 
 from src.retrieval.vector_search import VectorSearcher
 from src.retrieval.bm25_search import BM25Searcher
+from src.retrieval.reranker import Reranker
 from src.logger import get_logger
 
 logger = get_logger(__name__)
@@ -120,6 +121,8 @@ class HybridSearcher:
         # BM25 needs all documents upfront to calculate IDF (rarity scores)
         all_chunks = self._load_all_chunks()
         self.bm25_searcher = BM25Searcher(all_chunks)
+        self.reranker = Reranker()
+
 
         logger.info(
             f"HybridSearcher initialized: "
@@ -186,9 +189,12 @@ class HybridSearcher:
             vector_results, bm25_results, top_k=self.top_k
         )
 
+        # --- Rerank with cross-encoder for higher precision ---
+        final_results = self.reranker.rerank(query, final_results, top_k=self.top_k)
+
         top_score = final_results[0]["rrf_score"] if final_results else 0.0
         logger.info(
-            f"Hybrid fusion complete: {len(final_results)} results "
+            f"Hybrid Search complete: {len(final_results)} results "
             f"(top RRF score: {top_score:.6f})"
         )
 

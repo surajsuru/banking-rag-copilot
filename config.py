@@ -49,4 +49,7 @@ DB_NAME     = os.getenv("DB_NAME", "banking_rag")
 DB_USER     = os.getenv("DB_USER", "postgres")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 
+RERANKER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+
+
 
