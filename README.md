@@ -109,10 +109,10 @@ banking-rag-copilot/
 | 6 - Naive RAG | ✅ Done | First complete end-to-end question-answering pipeline (Groq + pgvector) |
 | 7 - Citations & Grounding | ✅ Done | Citation extractor, token-overlap grounding score, unsupported sentence detection |
 | 8 - Hybrid Retrieval | ✅ Done | BM25 + vector search with Reciprocal Rank Fusion (RRF), rank-bm25 |
-| 9 - Reranking | ⏳ Next | Cross-encoder candidate reranking |
-| 10 - Access Control | ⏳ Pending | Role-based document filtering |
-| 11 - Evaluation | ⏳ Pending | Precision@K, Recall@K, MRR, Answer Relevancy |
-| 12 - API & UI | ⏳ Pending | FastAPI REST endpoints + Streamlit UI |
+| 9 - Reranking | ✅ Done | Cross-encoder reranking with cross-encoder/ms-marco-MiniLM-L-6-v2 |
+| 10 - Access Control | ✅ Done | RBAC with 5 roles (public → admin), chunk-level access_level tagging, SQL filtering |
+| 11 - Evaluation | ✅ Done | Retrieval benchmark: Hit Rate=1.0, MRR=0.88, Precision@5=0.29 (15 questions, role=admin) |
+| 12 - API & UI | ⏳ Next | FastAPI REST endpoints + Streamlit UI |
 
 ---
 
@@ -150,6 +150,40 @@ Encountered issues during setup or development? See our comprehensive [Troublesh
 - Fixing MSVC compilation errors (`vacuum_delay_point` API change in PostgreSQL 18)
 - Database auto-creation and connection resolution
 - Python path bootstrapping for standalone scripts
+
+---
+
+## Evaluation Benchmark Results (Phase 11)
+
+Evaluated on 15 banking operations questions with `role=admin` (full document access), `top_k=5`.
+
+| Metric | Score | Interpretation |
+|---|---|---|
+| **Hit Rate** | **1.00** | Correct document retrieved for all 15 questions |
+| **MRR** | **0.88** | Correct document ranked #1 in 11/15 questions |
+| **Precision@5** | **0.29** | ~1.5 relevant docs per 5 retrieved slots |
+
+### Per-Question Results
+
+| ID | Hit | MRR | P@5 | Answer Type | Note |
+|---|---|---|---|---|---|
+| Q001 | ✅ | 1.00 | 0.20 | direct | error_code_reference.pdf at rank 1 |
+| Q002 | ✅ | 1.00 | 0.20 | multi_document | transaction_reversal_sop.docx at rank 1 |
+| Q003 | ✅ | 0.50 | 0.20 | direct | api_openapi.yaml at rank 2 |
+| Q004 | ✅ | 1.00 | 0.20 | direct | sla_policy.md at rank 1 |
+| Q005 | ✅ | 0.20 | 0.20 | metadata | access_matrix.csv at rank 5 (CSV tabular format limits embedding quality) |
+| Q006 | ✅ | 1.00 | 0.40 | multi_document | 2 of 3 expected sources retrieved |
+| Q007 | ✅ | 1.00 | 0.20 | versioned | release_notes.docx at rank 1 |
+| Q008 | ✅ | 1.00 | 0.20 | multi_document | imps_operations_guide.pdf at rank 1 |
+| Q009 | ✅ | 1.00 | 0.20 | structured | transaction_event_schema.json at rank 1 |
+| Q010 | ✅ | 1.00 | 1.00 | abstain | No expected sources — correctly handled |
+| Q011 | ✅ | 1.00 | 0.40 | multi_document | Both customer_onboarding.docx + kyc_policy.pdf retrieved |
+| Q012 | ✅ | 1.00 | 0.20 | direct | digital_payment_security.pdf at rank 1 |
+| Q013 | ✅ | 1.00 | 0.20 | versioned | transaction_reversal_sop.docx at rank 1 |
+| Q014 | ✅ | 0.50 | 0.20 | log_reasoning | error_code_reference.pdf at rank 2; sample_incident_logs.txt missed |
+| Q015 | ✅ | 1.00 | 0.40 | public_reference | Both source_register.md + imps_operations_guide.pdf retrieved |
+
+> Full results saved to [`data/evaluation/eval_results.json`](data/evaluation/eval_results.json)
 
 ---
 
