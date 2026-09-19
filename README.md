@@ -155,13 +155,10 @@ streamlit run app/ui.py
 
 ---
 
-## Troubleshooting & Engineering Log
+## Documentation & Engineering Logs
 
-Encountered issues during setup or development? See our comprehensive [Troubleshooting & Problems Faced Log](TROUBLESHOOTING.md) detailing:
-- Installing `pgvector` on Windows with PostgreSQL 18
-- Fixing MSVC compilation errors (`vacuum_delay_point` API change in PostgreSQL 18)
-- Database auto-creation and connection resolution
-- Python path bootstrapping for standalone scripts
+- 📘 **[Technical Interview Guide & Architecture Q&A](INTERVIEW_GUIDE.md)**: Master reference covering architectural decisions, chunking trade-offs, RRF math, Cross-Encoder reranking, and interview follow-up questions.
+- 🛠️ **[Troubleshooting & Problems Faced Log](TROUBLESHOOTING.md)**: Engineering details on `pgvector` compilation on Windows, PostgreSQL 18 C API changes, and database bootstrapping.
 
 ---
 
