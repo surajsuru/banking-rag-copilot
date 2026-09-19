@@ -28,6 +28,12 @@ A master technical reference covering architecture decisions, algorithmic trade-
 - [6. Production Engineering, Scalability & Failure Modes](#6-production-engineering-scalability--failure-modes)
   - [Q15: What were the biggest technical challenges and bugs you faced, and how did you resolve them?](#q15-what-were-the-biggest-technical-challenges-and-bugs-you-faced-and-how-did-you-resolve-them)
   - [Q16: How would you scale this architecture to 10 million documents and 1,000 QPS?](#q16-how-would-you-scale-this-architecture-to-10-million-documents-and-1000-qps)
+- [7. Production Operations, Deployment & Real-World Debugging](#7-production-operations-deployment--real-world-debugging)
+  - [Q17: A user reports in production: "The Copilot is giving wrong/inaccurate answers." Walk me through your step-by-step triage and debugging procedure.](#q17-a-user-reports-in-production-the-copilot-is-giving-wronginaccurate-answers-walk-me-through-your-step-by-step-triage-and-debugging-procedure)
+  - [Q18: How do you deploy this RAG application in a real production banking environment? Walk through CI/CD, containerization, and infrastructure stack.](#q18-how-do-you-deploy-this-rag-application-in-a-real-production-banking-environment-walk-through-cicd-containerization-and-infrastructure-stack)
+  - [Q19: How do you handle document updates, deletions, and fresh policy releases without taking the vector database offline?](#q19-how-do-you-handle-document-updates-deletions-and-fresh-policy-releases-without-taking-the-vector-database-offline)
+  - [Q20: What production observability, tracing, and monitoring stack would you set up for this RAG pipeline? (RAG Triad & Telemetry)](#q20-what-production-observability-tracing-and-monitoring-stack-would-you-set-up-for-this-rag-pipeline-rag-triad--telemetry)
+  - [Q21: How do you handle rate limits, API failures, and cost optimization when serving high-volume production traffic?](#q21-how-do-you-handle-rate-limits-api-failures-and-cost-optimization-when-serving-high-volume-production-traffic)
 
 ---
 
@@ -351,6 +357,172 @@ If scaled to 10M documents and 1,000 queries per second:
    - Redis semantic cache for queries: If cosine similarity between incoming query and a cached query $>0.96$, return cached RAG answer immediately ($<5\text{ms}$ latency, zero LLM cost).
 5. **Reranker Serving:**
    - Host the Cross-Encoder model on Triton Inference Server or ONNX Runtime with INT8 quantization to cut reranking latency from 80ms to <10ms.
+
+---
+
+## 7. Production Operations, Deployment & Real-World Debugging
+
+### Q17: A user reports in production: "The Copilot is giving wrong/inaccurate answers." Walk me through your step-by-step triage and debugging procedure.
+
+**Core Answer:**
+In enterprise RAG systems, inaccurate answers stem from one of four distinct failure points along the inference pipeline. I follow an evidence-based, 4-stage root cause analysis (RCA):
+
+```
+User Complaint: "Wrong Answer"
+       │
+       ├──► Stage 1: Retrieval Failure? (Did we fetch the right chunks?)
+       │       ├── Check RBAC filter (was valid doc suppressed due to role permissions?)
+       │       ├── Check BM25 / Vector scores (did term mismatch or vector drift miss it?)
+       │       └── Check Corpus Freshness (is the document ingested, or is it an outdated version?)
+       │
+       ├──► Stage 2: Reranker Suppression? (Did the Cross-Encoder filter it out?)
+       │       ├── Check top-15 RRF candidates vs top-5 reranked results
+       │       └── Verify if cross-encoder gave negative logit to a relevant passage
+       │
+       ├──► Stage 3: Context Truncation / Dilution? (Did the LLM receive the chunk properly?)
+       │       ├── Check context window assembly and token limits
+       │       └── Inspect "Lost in the Middle" positioning within the prompt
+       │
+       └──► Stage 4: Generation / Hallucination Failure? (Did the LLM ignore the context?)
+               ├── Check LLM Temperature (ensure T=0.1)
+               ├── Inspect system prompt adherence
+               └── Verify if the query required multi-hop synthesis that exceeded reasoning capacity
+```
+
+**Step-by-Step Diagnostic Actions:**
+1. **Retrieve the Request Trace ID:** Look up the unique request ID in our OpenTelemetry/structured logging system to extract the exact query, user role, raw retrieved chunks with similarity scores, reranker logits, assembled prompt, and LLM output.
+2. **Isolate Retrieval (Gold Standard Check):**
+   - Query PostgreSQL directly with the user's role: `SELECT * FROM chunks WHERE access_level = ANY(...) AND text ILIKE '%keyword%'`.
+   - If the chunk exists in the DB but wasn't retrieved: Check if the vector distance was too high or BM25 vocabulary missed it. (Fix: add synonym expansion or adjust hybrid weight).
+   - If the chunk was blocked by RBAC: The answer was omitted by design because the user lacks clearance. Explain the security policy.
+3. **Isolate Reranking:**
+   - Did the golden chunk appear in the top 15 RRF list but get dropped by the Cross-Encoder from the top 5? (Fix: adjust reranker threshold or expand top-$k$ to 7).
+4. **Isolate Generation:**
+   - If the top 5 chunks contained the exact answer but the LLM hallucinated: Inspect prompt adherence, check if conflicting older policy chunks confused the model, or add few-shot demonstrations to system prompt.
+5. **Regression Fix & Golden Set Expansion:** Once root cause is identified, add the failing query + correct answer into `data/evaluation/evaluation_questions.json` so future CI/CD runs prevent regression.
+
+#### Follow-Up Questions & How to Answer
+- **Follow-up 1:** *How would you enable user feedback to capture these failures automatically?*
+  - **Answer:** Add a binary 👍 / 👎 button with an optional text field in the Streamlit UI. Thumbs-down payloads log the query, user role, retrieved chunk IDs, and generated response directly to an incident triage queue in PostgreSQL for human review.
+
+---
+
+### Q18: How do you deploy this RAG application in a real production banking environment? Walk through CI/CD, containerization, and infrastructure stack.
+
+**Core Answer:**
+A banking deployment requires strict air-gapping, high availability (HA), zero-downtime rolling updates, and least-privilege networking.
+
+**1. Containerization & Services Architecture:**
+- **Container 1 (API Service):** FastAPI running with `uvicorn` workers behind an Nginx reverse proxy. Stateless and horizontally autoscaled.
+- **Container 2 (UI Service):** Streamlit frontend, isolated in a presentation subnet, talking strictly to the FastAPI backend over private TLS.
+- **Container 3 (Database):** Managed PostgreSQL (e.g. AWS RDS or on-prem cluster) with `pgvector` pre-installed, Multi-AZ replication, automated snapshots, and PgBouncer connection pooling.
+
+**2. Kubernetes / Cloud Topology:**
+```
+Client Browser (Banking Intranet)
+       │
+   HTTPS (TLS 1.3)
+       ▼
+[ Ingress Controller / ALB ]
+       │
+       ├──► /ui  ────────► [ Streamlit Pods ] (Horizontal Pod Autoscaler: 2-5 replicas)
+       │                         │ (Internal REST/gRPC)
+       └──► /api ────────► [ FastAPI Pods ] (HPA based on CPU/Request Latency: 4-20 replicas)
+                                 │
+                 ┌───────────────┴───────────────┐
+                 ▼                               ▼
+       [ PgBouncer / RDS PostgreSQL ]    [ Groq LPU API or vLLM Cluster ]
+       (pgvector, Read/Write Replicas)   (On-prem GPU worker pool)
+```
+
+**3. CI/CD Pipeline (GitHub Actions / GitLab CI):**
+- **Lint & Test:** `flake8`, `mypy`, and `pytest tests/` unit tests.
+- **Regression Evaluation Gate:** Run `python -m scripts.run_evaluation`. If Hit Rate $< 1.0$ or MRR $< 0.85$, the pipeline **fails the build** and aborts deployment.
+- **Image Build & Security Scan:** Docker container builds with Trivy/Snyk scanning for CVE vulnerabilities in Python dependencies.
+- **Rolling Deployment:** Kubernetes Helm chart triggers rolling update (`maxSurge=25%`, `maxUnavailable=0`).
+
+---
+
+### Q19: How do you handle document updates, deletions, and fresh policy releases without taking the vector database offline?
+
+**Core Answer:**
+In banking, policies and regulatory guidelines (e.g., RBI/NPCI circulars) update frequently. Re-indexing the entire database for one updated document is prohibitive. We use an **Incremental Ingestion & Change Data Capture (CDC)** pattern:
+
+**1. Content Hashing (SHA-256):**
+Each ingested file gets a deterministic SHA-256 checksum stored in a `documents` catalog table:
+```sql
+CREATE TABLE documents (
+    file_name VARCHAR(255) PRIMARY KEY,
+    checksum VARCHAR(64) NOT NULL,
+    chunk_count INT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+**2. Upsert & Clean Workflow:**
+When the ingestion pipeline runs on a directory:
+- **New File:** Compute chunks, generate embeddings, insert rows into `chunks`, record checksum in `documents`.
+- **Modified File (Checksum changed):**
+  1. Begin SQL Transaction.
+  2. `DELETE FROM chunks WHERE source_file = %s;` (Removes all stale chunks for that document).
+  3. Re-chunk, re-embed, and `save_chunks()` for the new file version.
+  4. Update checksum in `documents`.
+  5. `COMMIT;` — PostgreSQL atomic transaction guarantees queries during the update never see partial or mixed document states.
+- **Deleted File:** Atomic cascade delete: `DELETE FROM chunks WHERE source_file = %s;`.
+- **Unchanged File:** Skipped entirely ($0$ embedding compute cost).
+
+**3. Versioned Policy Handling:**
+For versioned documents (e.g., `release_notes_v2.md` vs `release_notes_v3.md`), metadata includes an `is_active` boolean or `version` integer. Deprecated chunks are tagged `is_active = FALSE` so the retriever filters them out during default production queries while preserving historical audit trails.
+
+---
+
+### Q20: What production observability, tracing, and monitoring stack would you set up for this RAG pipeline? (RAG Triad & Telemetry)
+
+**Core Answer:**
+Production RAG cannot be monitored with traditional software metrics (CPU/RAM/latency) alone. We track both **Systems Telemetry** and **RAG Triad Quality Metrics**:
+
+**1. System Metrics (Prometheus + Grafana):**
+- **P50 / P95 / P99 Latency Breakdown:**
+  - Embedding latency (`Embedder.embed_query`): ~15–25ms.
+  - SQL Vector search + BM25: ~30–45ms.
+  - Cross-Encoder reranking: ~70–90ms.
+  - Groq LLM Time-to-First-Token (TTFT) and Total Generation: ~500–700ms.
+- **Database Connection Pool Saturation:** PgBouncer active vs waiting clients.
+- **Error Rates:** 4xx client errors, 5xx backend crashes, LLM rate-limit (429) triggers.
+
+**2. RAG Quality Telemetry (OpenTelemetry + Langfuse / Phoenix):**
+We log every inference span with:
+- `trace_id`, `user_id`, `role`, `query`
+- Retrieved `chunk_ids`, cosine similarities, BM25 scores, and Cross-Encoder logits
+- Final prompt payload and raw LLM completion
+- **RAG Triad Automated Evals (asynchronous sampling on 5% of production traffic):**
+  1. **Context Relevance:** Does the retrieved text contain information relevant to the question? (Checks retrieval accuracy).
+  2. **Groundedness / Faithfulness:** Is every claim in the LLM's response supported by the retrieved context? (Detects hallucinations).
+  3. **Answer Relevance:** Does the generated response directly answer the user's prompt without topic drift?
+
+---
+
+### Q21: How do you handle rate limits, API failures, and cost optimization when serving high-volume production traffic?
+
+**Core Answer:**
+Production RAG systems must be resilient against upstream LLM provider outages, rate limits, and runaway token costs. We implement a 4-tier resilience pattern:
+
+1. **Semantic Caching (Redis + Cosine Similarity):**
+   - Frequently asked banking questions (e.g. *"What is the IFSC code for branch X?"* or *"What is the NEFT cut-off time?"*) repeat hundreds of times daily.
+   - We embed the user's query and query a Redis vector cache:
+     - If $\text{Cosine Similarity}(Q_{\text{new}}, Q_{\text{cached}}) \ge 0.96$ under the same `role`, return the cached response immediately.
+     - **Result:** Bypasses DB retrieval and Groq LLM completely, reducing latency to **<10ms** and slashing API costs by 35–50%.
+2. **Exponential Backoff with Jitter:**
+   - Groq API calls are wrapped with `tenacity` or `backoff`:
+     - Retries on HTTP 429 (Rate Limit) and HTTP 503 (Overloaded) with exponential backoff: $t_{\text{wait}} = 2^n + \text{uniform}(0, 1)$.
+3. **Graceful Fallback Model Degradation:**
+   - Primary: Groq Cloud (`llama-3.3-70b-versatile`)
+   - Secondary Fallback: Groq Cloud (`llama-3.1-8b-instant`) — faster, lower rate limits, minimal degradation for straightforward lookups.
+   - Tertiary Fallback (On-Premise / Air-gapped): Internal vLLM instance serving quantized `Llama-3-8B-Instruct`.
+4. **Token Budget & Context Clamping:**
+   - Limit retrieved chunks to top-5 (max 2,500 characters / ~600 tokens).
+   - Set `max_tokens=1024` on generation.
+   - Enforces deterministic maximum cost and inference time per request.
 
 ---
 
