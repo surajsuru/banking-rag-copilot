@@ -112,7 +112,7 @@ banking-rag-copilot/
 | 9 - Reranking | ✅ Done | Cross-encoder reranking with cross-encoder/ms-marco-MiniLM-L-6-v2 |
 | 10 - Access Control | ✅ Done | RBAC with 5 roles (public → admin), chunk-level access_level tagging, SQL filtering |
 | 11 - Evaluation | ✅ Done | Retrieval benchmark: Hit Rate=1.0, MRR=0.88, Precision@5=0.29 (15 questions, role=admin) |
-| 12 - API & UI | ⏳ Next | FastAPI REST endpoints + Streamlit UI |
+| 12 - API & UI | ✅ Done | FastAPI REST API (`/ask`, `/health`) + Streamlit chat UI with RBAC role selector |
 
 ---
 
@@ -139,7 +139,19 @@ python scripts/test_connection.py
 
 # 6. Run the Ingestion Pipeline
 python -m src.ingestion.pipeline
+
+# 7. Tag chunks with access levels
+python -m scripts.tag_access_levels
+
+# 8. Start the FastAPI backend (keep this terminal open)
+uvicorn app.api:app --reload --port 8000
+
+# 9. In a new terminal — start the Streamlit UI
+streamlit run app/ui.py
 ```
+
+> API docs available at: http://localhost:8000/docs
+> Streamlit UI available at: http://localhost:8501
 
 ---
 

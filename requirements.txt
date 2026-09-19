@@ -25,3 +25,8 @@ numpy                  # Numerical operations (cosine similarity, vector math)
 groq
 rank-bm25==0.2.2
 sqlalchemy
+
+fastapi       # REST API framework
+uvicorn         # ASGI server to run FastAPI
+streamlit   # Web UI framework
+
