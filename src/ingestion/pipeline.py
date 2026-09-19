@@ -44,6 +44,7 @@ def run_ingestion_pipeline(
     output_dir: Path = PROCESSED_DATA_DIR,
     chunk_size: int = DEFAULT_CHUNK_SIZE,
     chunk_overlap: int = DEFAULT_CHUNK_OVERLAP,
+    strategy: str = "fixed",
 ) -> List[Dict[str, Any]]:
     """
     Runs the complete document ingestion pipeline:
@@ -93,7 +94,8 @@ def run_ingestion_pipeline(
             doc_chunks = chunk_document(
                 cleaned_doc,
                 chunk_size=chunk_size,
-                chunk_overlap=chunk_overlap
+                chunk_overlap=chunk_overlap,
+                strategy=strategy,
             )
 
             # 5. Assign unique IDs to each chunk

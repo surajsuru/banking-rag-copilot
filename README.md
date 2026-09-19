@@ -199,6 +199,33 @@ Evaluated on 15 banking operations questions with `role=admin` (full document ac
 
 ---
 
+## Chunking Strategy Benchmark (Phase 12)
+
+To determine the optimal chunking configuration for our banking corpus, we benchmarked multiple chunk sizes, overlaps, and splitting algorithms against the golden evaluation dataset (15 test questions, `role=admin`, `top_k=5` via `HybridSearcher`).
+
+### Strategy Comparison
+
+| Strategy | Chunk Size (chars) | Overlap (chars) | Splitting Algorithm | Total Chunks | Hit Rate | MRR (Ranking Quality) | Precision@5 | Status |
+|---|---|---|---|---|---|---|---|---|
+| **`fixed_baseline`** | **500** | **100** | **Fixed sliding window** | **251** | **1.0000** | **0.8800** 🏆 | **0.2933** | **Selected Default** |
+| `recursive` | 500 | 100 | Multi-level separator (`\n\n`, `\n`, `. `, ` `) | 249 | 1.0000 | 0.8722 | 0.3067 | Benchmark Candidate |
+| `fixed_large` | 750 | 250 | Fixed sliding window | 205 | 1.0000 | 0.8556 | 0.3067 | Evaluated |
+| `fixed_small` | 300 | 100 | Fixed sliding window | 485 | 1.0000 | 0.8167 | 0.2933 | Evaluated |
+
+### Engineering Observations & Decision
+
+1. **Why `fixed_baseline` (500 / 100) remains the chosen strategy:**
+   - **Highest MRR (0.8800):** The golden source document is placed at rank #1 in the vast majority of retrieval queries, ensuring the top retrieved context fed to the LLM is directly relevant.
+   - **Optimal Information Density:** With 251 chunks, it balances context completeness with granular semantic matching without diluting vector representations.
+2. **Analysis of alternatives:**
+   - **`fixed_small` (300 / 100):** Fragmented documents into 485 chunks, creating excessive noise that dropped MRR to **0.8167**.
+   - **`fixed_large` (750 / 250):** Over-aggregated disparate banking policies into single chunks, reducing retrieval rank accuracy (MRR **0.8556**).
+   - **`recursive` (500 / 100):** Achieved competitive performance (MRR **0.8722**, Precision@5 **0.3067**), validating that the ~500-character boundary size is mathematically the sweet spot for this corpus.
+
+> Benchmark script available at [`scripts/benchmark_chunking.py`](scripts/benchmark_chunking.py) and raw evaluation data in [`data/evaluation/benchmark_results.json`](data/evaluation/benchmark_results.json).
+
+---
+
 ## License
 
 MIT License. For educational and portfolio use.

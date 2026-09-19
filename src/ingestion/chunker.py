@@ -125,6 +125,78 @@ def chunk_text_heading_aware(
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# 3. RECURSIVE CHUNKING
+# ─────────────────────────────────────────────────────────────────────────────
+
+def chunk_text_recursive(
+    text: str,
+    chunk_size: int = DEFAULT_CHUNK_SIZE,
+    chunk_overlap: int = DEFAULT_CHUNK_OVERLAP,
+    separators: Optional[List[str]] = None,
+) -> List[str]:
+    """
+    Recursively splits text using natural language boundaries.
+    Tries separators in order: paragraph → line → sentence → word → character.
+    
+    This preserves semantic meaning better than fixed-size splitting because
+    it never cuts mid-sentence or mid-paragraph when avoidable.
+    """
+    if separators is None:
+        separators = ["\n\n", "\n", ". ", " ", ""]
+
+    if not text:
+        return []
+
+    def _split(text: str, seps: List[str]) -> List[str]:
+        if not seps:
+            # No more separators — split by character as last resort
+            return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size - chunk_overlap)]
+
+        sep = seps[0]
+        remaining_seps = seps[1:]
+
+        if sep == "":
+            splits = list(text)
+        else:
+            splits = text.split(sep)
+
+        chunks = []
+        current = ""
+
+        for part in splits:
+            candidate = current + (sep if current else "") + part
+            if len(candidate) <= chunk_size:
+                current = candidate
+            else:
+                if current:
+                    chunks.append(current.strip())
+                if len(part) > chunk_size:
+                    # Part itself is too big — recurse with next separator
+                    sub = _split(part, remaining_seps)
+                    chunks.extend(sub)
+                    current = ""
+                else:
+                    current = part
+
+        if current.strip():
+            chunks.append(current.strip())
+
+        return [c for c in chunks if c.strip()]
+
+    raw_chunks = _split(text, separators)
+
+    # Apply overlap: add end of previous chunk to start of next
+    if chunk_overlap > 0 and len(raw_chunks) > 1:
+        overlapped = [raw_chunks[0]]
+        for i in range(1, len(raw_chunks)):
+            prev_tail = raw_chunks[i-1][-chunk_overlap:]
+            overlapped.append(prev_tail + " " + raw_chunks[i])
+        return overlapped
+
+    return raw_chunks
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 3. DOCUMENT-LEVEL CHUNKER INTERFACE
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -141,7 +213,7 @@ def chunk_document(
         document:      Cleaned Document dictionary from cleaner.py.
         chunk_size:    Max characters per chunk.
         chunk_overlap: Character overlap between consecutive chunks.
-        strategy:      'fixed' or 'heading_aware'.
+        strategy:      'fixed' or 'heading_aware' or 'recursive'.
 
     Returns:
         List of Chunk dicts containing content, positions, and lineage metadata.
@@ -155,10 +227,12 @@ def chunk_document(
     # Select chunking strategy
     if strategy == "heading_aware":
         raw_chunks = chunk_text_heading_aware(text, max_chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    elif strategy == "recursive":
+        raw_chunks = chunk_text_recursive(text, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     elif strategy == "fixed":
         raw_chunks = chunk_text_fixed(text, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     else:
-        raise ValueError(f"Unknown chunking strategy '{strategy}'. Supported: 'fixed', 'heading_aware'")
+        raise ValueError(f"Unknown chunking strategy '{strategy}'. Supported: 'fixed', 'heading_aware', 'recursive'")
 
     chunk_dicts = []
     start_char = 0
