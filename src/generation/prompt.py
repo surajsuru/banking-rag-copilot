@@ -7,6 +7,11 @@ strict banking compliance and anti-hallucination instructions.
 """
 
 from typing import List, Dict, Any
+from config import MAX_CONTEXT_CHARS
+from src.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 # System prompt defining the AI persona and strict operational guardrails
 BANKING_SYSTEM_PROMPT = """You are an expert AI Banking Operations Copilot for internal bank staff.
@@ -23,28 +28,42 @@ CRITICAL OPERATIONAL RULES:
 """
 
 
-def format_context(chunks: List[Dict[str, Any]]) -> str:
+def format_context(chunks: List[Dict[str, Any]], max_chars: int = MAX_CONTEXT_CHARS) -> str:
     """
-    Formats a list of retrieved chunks into a clear, delimited context block for the LLM.
+    Formats retrieved chunks into a context block for the LLM.
+    Respects a character budget to control token cost.
 
-    Example output:
-    ---
-    [Document 1] Source: transaction_reversal_sop.docx (Chunk #0)
-    Transaction Reversal Standard Operating Procedure...
-    ---
+    Args:
+        chunks:    Retrieved chunk dicts, already sorted by relevance.
+        max_chars: Maximum total characters allowed in context (~tokens * 4).
+
+    Returns:
+        Formatted context string, truncated to max_chars budget.
     """
     if not chunks:
         return "No relevant documentation found."
 
     context_parts = []
-    for i, chunk in enumerate(chunks, 1):
-        source = chunk.get("source_file", "unknown_document")
-        chunk_idx = chunk.get("chunk_index", 0)
-        text = chunk.get("text", "").strip()
+    total_chars   = 0
 
-        context_parts.append(
-            f"--- [Document {i}] Source: {source} (Chunk #{chunk_idx}) ---\n{text}"
-        )
+    for i, chunk in enumerate(chunks, 1):
+        source    = chunk.get("source_file", "unknown_document")
+        chunk_idx = chunk.get("chunk_index", 0)
+        text      = chunk.get("text", "").strip()
+
+        block = f"--- [Document {i}] Source: {source} (Chunk #{chunk_idx}) ---\n{text}"
+
+        # Stop adding chunks if we'd exceed the character budget
+        if total_chars + len(block) > max_chars:
+            logger.warning(
+                f"Context budget hit at chunk {i}/{len(chunks)} "
+                f"({total_chars} chars used / {max_chars} allowed). "
+                f"Remaining {len(chunks) - i + 1} chunk(s) dropped."
+            )
+            break
+
+        context_parts.append(block)
+        total_chars += len(block)
 
     return "\n\n".join(context_parts)
 

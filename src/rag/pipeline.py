@@ -12,6 +12,8 @@ from src.retrieval.hybrid_search import HybridSearcher
 from src.generation.prompt import build_prompt
 from src.generation.llm import GroqLLM
 from src.rag.citations import extract_citations, verify_grounding
+from config import RERANK_SCORE_THRESHOLD
+
 
 
 logger = get_logger(__name__)
@@ -62,6 +64,18 @@ class NaiveRAGPipeline:
 
         # 1. RETRIEVAL: Query pgvector for semantically relevant chunks
         chunks = self.searcher.search(question)
+
+        # 1a. QUALITY FILTER: Drop low-relevance chunks below rerank score threshold
+        before_filter = len(chunks)
+        chunks = [c for c in chunks if c.get("rerank_score", 1.0) >= RERANK_SCORE_THRESHOLD]
+        dropped = before_filter - len(chunks)
+        if dropped:
+            logger.info(f"Score filter: dropped {dropped} chunk(s) below threshold {RERANK_SCORE_THRESHOLD}")
+
+        # 1b. CONTEXT LOGGING: Log how much context will reach the LLM
+        context_chars = sum(len(c.get("text", "")) for c in chunks)
+        logger.info(f"Context utilization: {len(chunks)} chunk(s), ~{context_chars} chars (~{context_chars // 4} tokens) going to LLM")
+
 
         if not chunks:
             logger.warning("No relevant chunks retrieved from database.")

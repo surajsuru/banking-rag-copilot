@@ -51,5 +51,8 @@ DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 
 RERANKER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
+# ── RAG Quality Guards ──────────────────────────────────────────────────────
+RERANK_SCORE_THRESHOLD = float(os.getenv("RERANK_SCORE_THRESHOLD", "0.3"))  # Min rerank score to pass chunk to LLM
+MAX_CONTEXT_CHARS      = int(os.getenv("MAX_CONTEXT_CHARS", "8000"))        # ~2000 tokens @ 4 chars/token
 
 
