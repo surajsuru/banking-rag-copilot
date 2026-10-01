@@ -111,7 +111,7 @@ banking-rag-copilot/
 | 8 - Hybrid Retrieval | ✅ Done | BM25 + vector search with Reciprocal Rank Fusion (RRF), rank-bm25 |
 | 9 - Reranking | ✅ Done | Cross-encoder reranking with cross-encoder/ms-marco-MiniLM-L-6-v2 |
 | 10 - Access Control | ✅ Done | RBAC with 5 roles (public → admin), chunk-level access_level tagging, SQL filtering |
-| 11 - Evaluation | ✅ Done | Retrieval benchmark: Hit Rate=1.0, MRR=0.88, Precision@5=0.29 (15 questions, role=admin) |
+| 11 - Evaluation | ✅ Done | 50-Question Benchmark (v2.0): Hit Rate=96.0%, MRR=0.887, Context Precision=67.2%, Noise Reduction=72.0%, Guard Accuracy=100.0% |
 | 12 - API & UI | ✅ Done | FastAPI REST API (`/ask`, `/health`) + Streamlit chat UI with RBAC role selector |
 
 ---
@@ -164,35 +164,34 @@ streamlit run app/ui.py
 
 ## Evaluation Benchmark Results (Phase 11)
 
-Evaluated on 15 banking operations questions with `role=admin` (full document access), `top_k=5`.
+Evaluated on the expanded **50-question golden benchmark (v2.0)** with `role="admin"` (full document access), `top_k=5` retrieved candidates, and quality guard threshold `RERANK_SCORE_THRESHOLD = 0.3`.
 
-| Metric | Score | Interpretation |
+### 1. Retrieval & Quality Guard Summary
+
+| Metric | Score | Industry Interpretation |
 |---|---|---|
-| **Hit Rate** | **1.00** | Correct document retrieved for all 15 questions |
-| **MRR** | **0.88** | Correct document ranked #1 in 11/15 questions |
-| **Precision@5** | **0.29** | ~1.5 relevant docs per 5 retrieved slots |
+| **Hit Rate** | **96.0%** | Relevant document retrieved in top-5 for 48/50 questions across 4 categories |
+| **MRR (Mean Reciprocal Rank)** | **0.8867** | Golden chunk ranked #1 or #2 in nearly all queries |
+| **Raw Precision@5 (Pre-Filter)** | **33.2%** | Classic retrieval precision across all 5 retrieved slots |
+| **Context Precision (Post-Guard)** | **67.2%** | Precision of chunks surviving the similarity threshold filter (fed to LLM prompt) |
+| **Noise Reduction** | **72.0%** | **3.6 irrelevant chunks blocked per query** before hitting LLM context window |
+| **Prompt Token Savings** | **~27,000 tokens** | Tokens prevented from being sent to LLM prompt 
+across 50 test queries |
+| **Guard Accuracy (Category D)** | **100.0%** | **5/5 out-of-domain and adversarial attacks successfully declined (0 leaked chunks)** |
 
-### Per-Question Results
+---
 
-| ID | Hit | MRR | P@5 | Answer Type | Note |
-|---|---|---|---|---|---|
-| Q001 | ✅ | 1.00 | 0.20 | direct | error_code_reference.pdf at rank 1 |
-| Q002 | ✅ | 1.00 | 0.20 | multi_document | transaction_reversal_sop.docx at rank 1 |
-| Q003 | ✅ | 0.50 | 0.20 | direct | api_openapi.yaml at rank 2 |
-| Q004 | ✅ | 1.00 | 0.20 | direct | sla_policy.md at rank 1 |
-| Q005 | ✅ | 0.20 | 0.20 | metadata | access_matrix.csv at rank 5 (CSV tabular format limits embedding quality) |
-| Q006 | ✅ | 1.00 | 0.40 | multi_document | 2 of 3 expected sources retrieved |
-| Q007 | ✅ | 1.00 | 0.20 | versioned | release_notes.docx at rank 1 |
-| Q008 | ✅ | 1.00 | 0.20 | multi_document | imps_operations_guide.pdf at rank 1 |
-| Q009 | ✅ | 1.00 | 0.20 | structured | transaction_event_schema.json at rank 1 |
-| Q010 | ✅ | 1.00 | 1.00 | abstain | No expected sources — correctly handled |
-| Q011 | ✅ | 1.00 | 0.40 | multi_document | Both customer_onboarding.docx + kyc_policy.pdf retrieved |
-| Q012 | ✅ | 1.00 | 0.20 | direct | digital_payment_security.pdf at rank 1 |
-| Q013 | ✅ | 1.00 | 0.20 | versioned | transaction_reversal_sop.docx at rank 1 |
-| Q014 | ✅ | 0.50 | 0.20 | log_reasoning | error_code_reference.pdf at rank 2; sample_incident_logs.txt missed |
-| Q015 | ✅ | 1.00 | 0.40 | public_reference | Both source_register.md + imps_operations_guide.pdf retrieved |
+### 2. Category Performance Breakdown
 
-> Full results saved to [`data/evaluation/eval_results.json`](data/evaluation/eval_results.json)
+| Category | Questions | Hit Rate | MRR | Precision@5 | Context Precision | Focus Area |
+|---|:---:|:---:|:---:|:---:|:---:|---|
+| **A — Factual Lookups** | 20 | **90.0%** | **0.8167** | 22.0% | **63.0%** | Error codes (TXN/GW/ERR), SLAs, API endpoints, schema fields |
+| **B — Multi-Chunk SOPs** | 15 | **100.0%** | **0.8667** | 34.7% | **48.9%** | Multi-document cross-reasoning (UPI reversals, NEFT/RTGS batch disputes) |
+| **C — Banking Operations** | 10 | **100.0%** | **1.0000** | 20.0% | **86.7%** | 3-way reconciliation, RBI Deemed Success, GL suspense, incident playbooks |
+| **D — Boundary / Negative** | 5 | **100.0%** | **1.0000** | 100.0% | **100.0%** | Out-of-domain (salaries, wealth advice) & adversarial exploit prevention |
+
+> Full results and logs saved to [data/evaluation/eval_results.json](data/evaluation/eval_results.json)
+> Test suite available at [data/evaluation/evaluation_questions.json](data/evaluation/evaluation_questions.json)
 
 ---
 

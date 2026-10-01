@@ -30,3 +30,5 @@ fastapi       # REST API framework
 uvicorn         # ASGI server to run FastAPI
 streamlit   # Web UI framework
 
+
+jev-reranker

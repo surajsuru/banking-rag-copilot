@@ -33,8 +33,10 @@ from typing import List, Dict, Any
 
 from sentence_transformers import CrossEncoder
 
-from config import RERANKER_MODEL
+# FIXED
+from config import RERANKER_MODEL, JEV_API_KEY, JEV_INSTRUCTIONS, JEV_CRITERIA
 from src.logger import get_logger
+
 
 logger = get_logger(__name__)
 
@@ -120,3 +122,109 @@ class Reranker:
         )
 
         return results
+
+class JEVReranker:
+    """
+    Reranks retrieved chunks using the JEV (TypeSafe AI) steerable reranker.
+
+    Unlike the cross-encoder which uses a fixed MS MARCO scoring model,
+    JEV accepts custom relevance CRITERIA in plain English — making it
+    domain-aware without any fine-tuning.
+
+    Falls back to the standard cross-encoder Reranker if JEV_API_KEY is missing.
+
+    Usage:
+        reranker = JEVReranker()
+        reranked = reranker.rerank(query, chunks, top_k=3)
+    """
+
+    def __init__(self):
+        if not JEV_API_KEY:
+            logger.warning(
+                "JEV_API_KEY not set — falling back to cross-encoder Reranker."
+            )
+            self._fallback = Reranker()
+            self._use_fallback = True
+        else:
+            from jev_reranker import JevReranker
+            # CORRECT - tells the library to use Jev AI's endpoint            
+            self.model = JevReranker(
+                api_key=JEV_API_KEY,
+                endpoint="https://jev-ai.pro/api/v1/systemone"
+            )
+
+
+            self._use_fallback = False
+            logger.info("JEVReranker loaded successfully.")
+
+    def rerank(
+        self,
+        query: str,
+        chunks: List[Dict[str, Any]],
+        top_k: int = 3
+    ) -> List[Dict[str, Any]]:
+        """
+        Re-scores chunks using JEV's banking-aware relevance criteria.
+
+        Args:
+            query:   The user's original question.
+            chunks:  Candidate chunks from hybrid search.
+            top_k:   How many top-scored chunks to return.
+
+        Returns:
+            List of top_k chunk dicts sorted by JEV relevance score.
+        """
+        if self._use_fallback:
+            return self._fallback.rerank(query, chunks, top_k)
+
+        if not chunks:
+            logger.warning("JEVReranker received empty chunk list - skipping.")
+            return []
+
+        # Extract raw text from each chunk for JEV
+        texts = [chunk.get("text", "") for chunk in chunks]
+
+        dynamic_instruction = {
+            "instructions": f"Determine if the following document directly provides the specific answer, definition, or resolution for this user query: '{query}'. Document: {{document}}",
+            "criteria": {
+                "true": f"The document specifically answers, defines, or contains actionable steps for '{query}'.",
+                "false": f"The document does not answer or is not specifically relevant to '{query}'."
+            }
+        }
+
+        result = self.model.rerank(
+            query,
+            texts,
+            instruction=dynamic_instruction,
+            top_k=top_k,
+            return_documents=True,
+            detail=True
+        )
+
+
+
+        # result is a dict — extract ranked documents
+        ranked_items = result.get("results", result.get("documents", []))
+
+        # Map back to original chunk dicts using document_index from JEV
+        # JEV returns document_index = position in the original texts list we sent
+        # This is more reliable than text matching since JEV truncates text to 500 chars
+        scored_chunks = []
+        for item in ranked_items:
+            doc_index = item.get("document_index")
+            score     = item.get("score", 0.0)
+
+            if doc_index is not None and doc_index < len(chunks):
+                enriched = chunks[doc_index].copy()
+                enriched["rerank_score"] = round(float(score), 4)
+                scored_chunks.append(enriched)
+
+
+
+        top_score = scored_chunks[0]["rerank_score"] if scored_chunks else 0.0
+        logger.info(
+            f"JEV Reranking complete: {len(chunks)} candidates → "
+            f"{len(scored_chunks[:top_k])} results (top score: {top_score:.4f})"
+        )
+
+        return scored_chunks[:top_k]

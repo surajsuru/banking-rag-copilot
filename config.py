@@ -56,3 +56,21 @@ RERANK_SCORE_THRESHOLD = float(os.getenv("RERANK_SCORE_THRESHOLD", "0.3"))  # Mi
 MAX_CONTEXT_CHARS      = int(os.getenv("MAX_CONTEXT_CHARS", "8000"))        # ~2000 tokens @ 4 chars/token
 
 
+# JEV Reranker config
+JEV_RERANKER_ENABLED  = os.getenv("JEV_RERANKER_ENABLED", "false").lower() == "true"
+JEV_API_KEY           = os.getenv("JEV_API_KEY", "")
+# JEV requires instructions as a string with {document} placeholder
+# and criteria as a dict with "true" and "false" keys exactly
+JEV_INSTRUCTIONS = (
+    "Does {document} directly answer a banking operations question about "
+    "payment processing (UPI, NEFT, RTGS, IMPS), transaction reversals, "
+    "reconciliation, compliance policies, or API error codes? "
+    "Prefer passages with specific facts, procedures, or error code definitions."
+)
+
+JEV_CRITERIA = {
+    "true":  "Contains specific banking procedures, error codes, policy rules, or step-by-step instructions directly relevant to the query.",
+    "false": "Generic introductory text, unrelated topics, or only loosely mentions banking terms without useful facts."
+}
+
+

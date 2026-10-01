@@ -33,9 +33,10 @@ from typing import List, Dict, Any
 
 from src.retrieval.vector_search import VectorSearcher
 from src.retrieval.bm25_search import BM25Searcher
-from src.retrieval.reranker import Reranker
 from src.logger import get_logger
 from src.security.access_control import get_allowed_access_levels
+from config import JEV_RERANKER_ENABLED, JEV_API_KEY
+from src.retrieval.reranker import Reranker, JEVReranker
 
 logger = get_logger(__name__)
 
@@ -125,7 +126,14 @@ class HybridSearcher:
         # BM25 needs all documents upfront to calculate IDF (rarity scores)
         all_chunks = self._load_all_chunks()
         self.bm25_searcher = BM25Searcher(all_chunks)
-        self.reranker = Reranker()
+        # After A/B test confirms JEV is better
+        if JEV_RERANKER_ENABLED and JEV_API_KEY:
+            self.reranker = JEVReranker()   # Primary
+            logger.info("Using JEV as primary reranker")
+        else:
+            self.reranker = Reranker()       # Fallback (cross-encoder)
+            logger.info("Using cross-encoder as reranker")
+
 
 
         logger.info(

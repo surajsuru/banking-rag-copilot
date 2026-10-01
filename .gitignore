@@ -20,7 +20,9 @@ ENV/
 # ── Data directories ─────────────────────────────────────────────
 # Raw data may be large or proprietary
 data/processed/
-data/evaluation/
+data/evaluation/*
+!data/evaluation/evaluation_questions.json
+!data/evaluation/eval_results.json
 
 # ── IDE and Editor files ─────────────────────────────────────────
 .vscode/

@@ -1,0 +1,1232 @@
+{
+  "results": [
+    {
+      "id": "Q001",
+      "category": "A_factual",
+      "question": "What does error TXN-1042 mean?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "error_code_reference.pdf"
+      ],
+      "retrieved_sources": [
+        "error_code_reference.pdf",
+        "transaction_processing.md",
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 50.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 3.606
+    },
+    {
+      "id": "Q002",
+      "category": "A_factual",
+      "question": "What does error code TXN-1001 indicate and what is the first action to take?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "error_code_reference.pdf"
+      ],
+      "retrieved_sources": [
+        "error_code_reference.pdf",
+        "transaction_processing.md",
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 50.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.199
+    },
+    {
+      "id": "Q003",
+      "category": "A_factual",
+      "question": "What does gateway error GW-3007 mean and under what policy is retry allowed?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "error_code_reference.pdf"
+      ],
+      "retrieved_sources": [
+        "error_code_reference.pdf",
+        "error_code_reference.pdf",
+        "error_code_reference.pdf",
+        "incident_response_runbook.docx",
+        "support_faq.txt"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 3,
+      "n_rejected": 2,
+      "tokens_saved": 300,
+      "latency_sec": 0.193
+    },
+    {
+      "id": "Q004",
+      "category": "A_factual",
+      "question": "What does error ERR-GW-07 signify and what is the connection reset scenario?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "error_code_reference.pdf",
+        "sample_incident_logs.txt"
+      ],
+      "retrieved_sources": [
+        "incident_response_runbook.docx",
+        "error_code_reference.pdf",
+        "error_code_reference.pdf",
+        "incident_response_runbook.docx",
+        "error_code_reference.pdf"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 0.5,
+      "precision_at_5": 0.2,
+      "ctx_precision": 60.0,
+      "n_accepted": 5,
+      "n_rejected": 0,
+      "tokens_saved": 0,
+      "latency_sec": 0.187
+    },
+    {
+      "id": "Q005",
+      "category": "A_factual",
+      "question": "What is the maximum IMPS transaction limit stated on the public NPCI reference page?",
+      "answer_type": "public_reference",
+      "expected_sources": [
+        "imps_operations_guide.pdf",
+        "source_register.md"
+      ],
+      "retrieved_sources": [
+        "imps_operations_guide.pdf",
+        "source_register.md",
+        "imps_operations_guide.pdf",
+        "core_banking_error_codes.md",
+        "neft_rtgs_processing_guide.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.4,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.264
+    },
+    {
+      "id": "Q006",
+      "category": "A_factual",
+      "question": "What is the fictional bank standard response target for a Sev-1 payment incident?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "sla_policy.md"
+      ],
+      "retrieved_sources": [
+        "sla_policy.md",
+        "sla_policy.md",
+        "incident_management_playbook.md",
+        "incident_management_playbook.md",
+        "incident_management_playbook.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 66.7,
+      "n_accepted": 3,
+      "n_rejected": 2,
+      "tokens_saved": 300,
+      "latency_sec": 0.399
+    },
+    {
+      "id": "Q007",
+      "category": "A_factual",
+      "question": "What fields are required to publish a TransactionPosted event?",
+      "answer_type": "structured",
+      "expected_sources": [
+        "transaction_event_schema.json"
+      ],
+      "retrieved_sources": [
+        "transaction_event_schema.json",
+        "incident_management_playbook.md",
+        "transaction_processing.md",
+        "api_integration_handbook.md",
+        "README.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 0.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.345
+    },
+    {
+      "id": "Q008",
+      "category": "A_factual",
+      "question": "Which API endpoint retrieves an account balance and what authentication is required?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "api_openapi.yaml",
+        "api_authentication.md"
+      ],
+      "retrieved_sources": [
+        "support_faq.txt",
+        "api_authentication.md",
+        "api_integration_handbook.md",
+        "api_openapi.yaml",
+        "api_integration_handbook.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 0.5,
+      "precision_at_5": 0.4,
+      "ctx_precision": 0.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.277
+    },
+    {
+      "id": "Q009",
+      "category": "A_factual",
+      "question": "What changed in release 2026.08 that affects transaction timeout behavior?",
+      "answer_type": "versioned",
+      "expected_sources": [
+        "release_notes.docx"
+      ],
+      "retrieved_sources": [
+        "release_notes.docx",
+        "sample_incident_logs.txt",
+        "sla_policy.md",
+        "core_banking_error_codes.md",
+        "release_notes_v2_v3.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.305
+    },
+    {
+      "id": "Q010",
+      "category": "A_factual",
+      "question": "What error code is raised when the ledger is unavailable during a transaction?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "error_code_reference.pdf",
+        "core_banking_error_codes.md"
+      ],
+      "retrieved_sources": [
+        "support_tickets.ndjson",
+        "sample_incident_logs.txt",
+        "error_code_reference.pdf",
+        "core_banking_error_codes.md",
+        "transaction_processing.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 0.3333333333333333,
+      "precision_at_5": 0.4,
+      "ctx_precision": 33.3,
+      "n_accepted": 3,
+      "n_rejected": 2,
+      "tokens_saved": 300,
+      "latency_sec": 0.308
+    },
+    {
+      "id": "Q011",
+      "category": "A_factual",
+      "question": "What is the NEFT processing window and what happens to transactions submitted outside the window?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "neft_rtgs_processing_guide.md"
+      ],
+      "retrieved_sources": [
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 0.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.205
+    },
+    {
+      "id": "Q012",
+      "category": "A_factual",
+      "question": "What does TXN-2031 mean and when is a controlled retry allowed?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "error_code_reference.pdf"
+      ],
+      "retrieved_sources": [
+        "error_code_reference.pdf",
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md",
+        "transaction_processing.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.188
+    },
+    {
+      "id": "Q013",
+      "category": "A_factual",
+      "question": "Which security control addresses storing payment secrets in client-side hidden fields?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "digital_payment_security.pdf"
+      ],
+      "retrieved_sources": [
+        "digital_payment_security.pdf",
+        "digital_payment_security.pdf",
+        "digital_payment_security.pdf",
+        "source_register.md",
+        "api_integration_handbook.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.215
+    },
+    {
+      "id": "Q014",
+      "category": "A_factual",
+      "question": "What changed between the retired v3.1 and current v3.2 transaction reversal workflow?",
+      "answer_type": "versioned",
+      "expected_sources": [
+        "transaction_reversal_sop.docx"
+      ],
+      "retrieved_sources": [
+        "transaction_reversal_sop.docx",
+        "release_notes_v2_v3.md",
+        "api_integration_handbook.md",
+        "release_notes_v2_v3.md",
+        "transaction_reversal_sop.docx"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.211
+    },
+    {
+      "id": "Q015",
+      "category": "A_factual",
+      "question": "What customer evidence is required for a medium-risk individual onboarding case in the synthetic policy?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "customer_onboarding.docx",
+        "kyc_policy.pdf"
+      ],
+      "retrieved_sources": [
+        "customer_onboarding.docx",
+        "kyc_policy.pdf",
+        "kyc_aml_compliance_manual.md",
+        "kyc_aml_compliance_manual.md",
+        "transaction_monitoring_sop.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.4,
+      "ctx_precision": 100.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.167
+    },
+    {
+      "id": "Q016",
+      "category": "A_factual",
+      "question": "What is the data retention period for transaction logs according to the data retention policy?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "data_retention_policy.html"
+      ],
+      "retrieved_sources": [
+        "data_retention_policy.html",
+        "document_catalog.csv",
+        "kyc_policy.pdf",
+        "neft_rtgs_processing_guide.md",
+        "data_retention_policy.html"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.198
+    },
+    {
+      "id": "Q017",
+      "category": "A_factual",
+      "question": "What is the RTGS minimum transaction amount and cut-off time for same-day settlement?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "neft_rtgs_processing_guide.md"
+      ],
+      "retrieved_sources": [
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.205
+    },
+    {
+      "id": "Q018",
+      "category": "A_factual",
+      "question": "What system architecture components handle payment routing between the switch and core banking?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "system_architecture.md"
+      ],
+      "retrieved_sources": [
+        "system_integration_guide.md",
+        "system_integration_guide.md",
+        "reconciliation_procedures.md",
+        "transaction_processing.md",
+        "core_banking_error_codes.md"
+      ],
+      "hit_rate": 0.0,
+      "mrr": 0.0,
+      "precision_at_5": 0.0,
+      "ctx_precision": 0.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.185
+    },
+    {
+      "id": "Q019",
+      "category": "A_factual",
+      "question": "What are the AML transaction monitoring thresholds for flagging suspicious activity?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "kyc_aml_compliance_manual.md"
+      ],
+      "retrieved_sources": [
+        "neft_rtgs_processing_guide.md",
+        "transaction_monitoring_sop.md",
+        "transaction_monitoring_sop.md",
+        "transaction_monitoring_sop.md",
+        "core_banking_error_codes.md"
+      ],
+      "hit_rate": 0.0,
+      "mrr": 0.0,
+      "precision_at_5": 0.0,
+      "ctx_precision": 0.0,
+      "n_accepted": 5,
+      "n_rejected": 0,
+      "tokens_saved": 0,
+      "latency_sec": 0.184
+    },
+    {
+      "id": "Q020",
+      "category": "A_factual",
+      "question": "What is the change management approval process and who signs off on emergency changes?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "change_management_policy.html"
+      ],
+      "retrieved_sources": [
+        "change_management_policy.html",
+        "change_management_policy.html",
+        "chunking_benchmark.md",
+        "chunking_benchmark.md",
+        "kyc_aml_compliance_manual.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.182
+    },
+    {
+      "id": "Q021",
+      "category": "B_multi_chunk",
+      "question": "What steps should an operator follow to reverse a transaction that was debited but not credited, and what SLA applies to the resolution?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "transaction_reversal_sop.docx",
+        "transaction_processing.md",
+        "sla_policy.md"
+      ],
+      "retrieved_sources": [
+        "transaction_reversal_sop.docx",
+        "reconciliation_procedures.md",
+        "imps_operations_guide.pdf",
+        "transaction_reversal_sop.docx",
+        "support_faq.txt"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.261
+    },
+    {
+      "id": "Q022",
+      "category": "B_multi_chunk",
+      "question": "A UPI payment has a successful switch response but the ledger was not updated. What should be checked next and what reconciliation steps apply?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "upi_integration_guide.pdf",
+        "payment_reconciliation.pdf",
+        "incident_response_runbook.docx"
+      ],
+      "retrieved_sources": [
+        "upi_integration_guide.pdf",
+        "payment_reconciliation.pdf",
+        "reconciliation_procedures.md",
+        "imps_operations_guide.pdf",
+        "payment_reconciliation.pdf"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.4,
+      "ctx_precision": 100.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.304
+    },
+    {
+      "id": "Q023",
+      "category": "B_multi_chunk",
+      "question": "What does IMPS availability mean publicly, what fictional bank-specific queue behavior should operations know, and what is the transaction limit?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "imps_operations_guide.pdf",
+        "source_register.md"
+      ],
+      "retrieved_sources": [
+        "imps_operations_guide.pdf",
+        "imps_operations_guide.pdf",
+        "api_integration_handbook.md",
+        "support_faq.txt",
+        "chunking_benchmark.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.284
+    },
+    {
+      "id": "Q024",
+      "category": "B_multi_chunk",
+      "question": "Find incidents where ERR-GW-07 appears, summarize common symptoms, and identify what the error code means.",
+      "answer_type": "log_reasoning",
+      "expected_sources": [
+        "sample_incident_logs.txt",
+        "error_code_reference.pdf"
+      ],
+      "retrieved_sources": [
+        "incident_response_runbook.docx",
+        "incident_response_runbook.docx",
+        "error_code_reference.pdf",
+        "error_code_reference.pdf",
+        "error_code_reference.pdf"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 0.3333333333333333,
+      "precision_at_5": 0.2,
+      "ctx_precision": 33.3,
+      "n_accepted": 3,
+      "n_rejected": 2,
+      "tokens_saved": 300,
+      "latency_sec": 0.244
+    },
+    {
+      "id": "Q025",
+      "category": "B_multi_chunk",
+      "question": "A beneficiary was recently added but the payment failed with TXN-1042. What is the cooling period and what validation step needs to be completed?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "error_code_reference.pdf",
+        "transaction_reversal_sop.docx"
+      ],
+      "retrieved_sources": [
+        "support_faq.txt",
+        "transaction_processing.md",
+        "error_code_reference.pdf",
+        "chunking_benchmark.md",
+        "core_banking_error_codes.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 0.3333333333333333,
+      "precision_at_5": 0.2,
+      "ctx_precision": 0.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.263
+    },
+    {
+      "id": "Q026",
+      "category": "B_multi_chunk",
+      "question": "What KYC documents are required for a high-risk corporate customer and which AML controls apply during onboarding?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "kyc_policy.pdf",
+        "kyc_aml_compliance_manual.md",
+        "customer_onboarding.docx"
+      ],
+      "retrieved_sources": [
+        "kyc_aml_compliance_manual.md",
+        "kyc_aml_compliance_manual.md",
+        "kyc_aml_compliance_manual.md",
+        "kyc_policy.pdf",
+        "kyc_aml_compliance_manual.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.4,
+      "ctx_precision": 100.0,
+      "n_accepted": 3,
+      "n_rejected": 2,
+      "tokens_saved": 300,
+      "latency_sec": 0.225
+    },
+    {
+      "id": "Q027",
+      "category": "B_multi_chunk",
+      "question": "An international SWIFT transfer is failing with a gateway timeout. What does the error code mean and what is the incident escalation process for Sev-2?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "error_code_reference.pdf",
+        "incident_management_playbook.md",
+        "sla_policy.md"
+      ],
+      "retrieved_sources": [
+        "error_code_reference.pdf",
+        "incident_management_playbook.md",
+        "sla_policy.md",
+        "core_banking_error_codes.md",
+        "support_faq.txt"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.6,
+      "ctx_precision": 0.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.259
+    },
+    {
+      "id": "Q028",
+      "category": "B_multi_chunk",
+      "question": "What are the reconciliation steps when NEFT batch settlement has a mismatch between switch records and core banking?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "neft_rtgs_processing_guide.md",
+        "reconciliation_procedures.md",
+        "payment_reconciliation.pdf"
+      ],
+      "retrieved_sources": [
+        "neft_rtgs_processing_guide.md",
+        "payment_reconciliation.pdf",
+        "reconciliation_procedures.md",
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.6,
+      "ctx_precision": 100.0,
+      "n_accepted": 3,
+      "n_rejected": 2,
+      "tokens_saved": 300,
+      "latency_sec": 0.248
+    },
+    {
+      "id": "Q029",
+      "category": "B_multi_chunk",
+      "question": "How should an operator monitor and flag a series of rapid small transactions that may indicate structuring under AML rules?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "transaction_monitoring_sop.md",
+        "kyc_aml_compliance_manual.md"
+      ],
+      "retrieved_sources": [
+        "transaction_monitoring_sop.md",
+        "transaction_monitoring_sop.md",
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md",
+        "transaction_monitoring_sop.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 0.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.244
+    },
+    {
+      "id": "Q030",
+      "category": "B_multi_chunk",
+      "question": "What integration steps are needed to connect a new payment partner to the system and what security controls apply to the API keys?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "api_integration_handbook.md",
+        "digital_payment_security.pdf",
+        "system_integration_guide.md"
+      ],
+      "retrieved_sources": [
+        "api_integration_handbook.md",
+        "upi_integration_guide.pdf",
+        "README.md",
+        "api_integration_handbook.md",
+        "support_faq.txt"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 0.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.252
+    },
+    {
+      "id": "Q031",
+      "category": "B_multi_chunk",
+      "question": "A core banking error code is fired during account debit. Which document explains the error and which runbook covers the recovery steps?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "core_banking_error_codes.md",
+        "incident_response_runbook.docx"
+      ],
+      "retrieved_sources": [
+        "core_banking_error_codes.md",
+        "incident_management_playbook.md",
+        "incident_response_runbook.docx",
+        "core_banking_error_codes.md",
+        "chunking_benchmark.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.4,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.257
+    },
+    {
+      "id": "Q032",
+      "category": "B_multi_chunk",
+      "question": "What release notes changes in 2026 impacted the reversal workflow and what are the new steps operators must follow?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "release_notes.docx",
+        "release_notes_v2_v3.md",
+        "transaction_reversal_sop.docx"
+      ],
+      "retrieved_sources": [
+        "release_notes.docx",
+        "release_notes_v2_v3.md",
+        "transaction_reversal_sop.docx",
+        "kyc_policy.pdf",
+        "README.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.6,
+      "ctx_precision": 0.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.287
+    },
+    {
+      "id": "Q033",
+      "category": "B_multi_chunk",
+      "question": "A customer account was frozen due to an AML flag. What is the investigation procedure and what documents must be collected?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "kyc_aml_compliance_manual.md",
+        "account_management.docx"
+      ],
+      "retrieved_sources": [
+        "transaction_monitoring_sop.md",
+        "neft_rtgs_processing_guide.md",
+        "kyc_aml_compliance_manual.md",
+        "core_banking_error_codes.md",
+        "support_faq.txt"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 0.3333333333333333,
+      "precision_at_5": 0.2,
+      "ctx_precision": 0.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.283
+    },
+    {
+      "id": "Q034",
+      "category": "B_multi_chunk",
+      "question": "During a P1 outage of the payment switch, what is the incident management process and what communication is required to stakeholders?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "incident_management_playbook.md",
+        "incident_response_runbook.docx",
+        "sla_policy.md"
+      ],
+      "retrieved_sources": [
+        "incident_management_playbook.md",
+        "incident_management_playbook.md",
+        "incident_management_playbook.md",
+        "incident_response_runbook.docx",
+        "support_faq.txt"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.4,
+      "ctx_precision": 0.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.265
+    },
+    {
+      "id": "Q035",
+      "category": "B_multi_chunk",
+      "question": "What security framework controls apply when a third-party processor handles card transaction data and which compliance standards are referenced?",
+      "answer_type": "multi_document",
+      "expected_sources": [
+        "security_controls_framework.md",
+        "digital_payment_security.pdf"
+      ],
+      "retrieved_sources": [
+        "security_controls_framework.md",
+        "digital_payment_security.pdf",
+        "transaction_monitoring_sop.md",
+        "security_controls_framework.md",
+        "kyc_aml_compliance_manual.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.4,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.222
+    },
+    {
+      "id": "Q036",
+      "category": "C_operations",
+      "question": "What are the three legs of the 3-way reconciliation architecture and what files are compared?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "reconciliation_procedures.md"
+      ],
+      "retrieved_sources": [
+        "reconciliation_procedures.md",
+        "payment_reconciliation.pdf",
+        "reconciliation_procedures.md",
+        "core_banking_error_codes.md",
+        "README.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.222
+    },
+    {
+      "id": "Q037",
+      "category": "C_operations",
+      "question": "What is the resolution timeline and customer penalty under RBI circular for a Deemed Success transaction?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "reconciliation_procedures.md"
+      ],
+      "retrieved_sources": [
+        "reconciliation_procedures.md",
+        "reconciliation_procedures.md",
+        "neft_rtgs_processing_guide.md",
+        "neft_rtgs_processing_guide.md",
+        "transaction_monitoring_sop.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 66.7,
+      "n_accepted": 3,
+      "n_rejected": 2,
+      "tokens_saved": 300,
+      "latency_sec": 0.248
+    },
+    {
+      "id": "Q038",
+      "category": "C_operations",
+      "question": "What General Ledger account is used to record adjusting entries for Type 2 Force Debit settlement discrepancies?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "reconciliation_procedures.md"
+      ],
+      "retrieved_sources": [
+        "reconciliation_procedures.md",
+        "reconciliation_procedures.md",
+        "payment_reconciliation.pdf",
+        "account_management.docx",
+        "transaction_processing.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.242
+    },
+    {
+      "id": "Q039",
+      "category": "C_operations",
+      "question": "What is the acknowledgement target and specialist response SLA for a Sev-1 payment incident?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "sla_policy.md"
+      ],
+      "retrieved_sources": [
+        "sla_policy.md",
+        "sla_policy.md",
+        "incident_management_playbook.md",
+        "incident_management_playbook.md",
+        "incident_response_runbook.docx"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.268
+    },
+    {
+      "id": "Q040",
+      "category": "C_operations",
+      "question": "Who leads war room coordination and what role is prohibited from writing code during an active incident?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "incident_management_playbook.md"
+      ],
+      "retrieved_sources": [
+        "incident_management_playbook.md",
+        "incident_management_playbook.md",
+        "data_retention_policy.html",
+        "incident_management_playbook.md",
+        "access_matrix.csv"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 0.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.246
+    },
+    {
+      "id": "Q041",
+      "category": "C_operations",
+      "question": "What approval is required to execute an Emergency change under the technology change management policy?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "change_management_policy.html"
+      ],
+      "retrieved_sources": [
+        "change_management_policy.html",
+        "change_management_policy.html",
+        "chunking_benchmark.md",
+        "document_catalog.csv",
+        "incident_management_playbook.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.231
+    },
+    {
+      "id": "Q042",
+      "category": "C_operations",
+      "question": "What is the mandatory data retention period for security evidence and operational incident records?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "data_retention_policy.html"
+      ],
+      "retrieved_sources": [
+        "data_retention_policy.html",
+        "data_retention_policy.html",
+        "neft_rtgs_processing_guide.md",
+        "kyc_policy.pdf",
+        "kyc_aml_compliance_manual.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.207
+    },
+    {
+      "id": "Q043",
+      "category": "C_operations",
+      "question": "What initial checks should support agents conduct when a customer reports money debited but not credited?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "support_faq.txt"
+      ],
+      "retrieved_sources": [
+        "support_faq.txt",
+        "imps_operations_guide.pdf",
+        "support_faq.txt",
+        "reconciliation_procedures.md",
+        "sla_policy.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.248
+    },
+    {
+      "id": "Q044",
+      "category": "C_operations",
+      "question": "At what scheduled daily cutoff times are NPCI UPI settlement EP files ingested?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "reconciliation_procedures.md"
+      ],
+      "retrieved_sources": [
+        "reconciliation_procedures.md",
+        "reconciliation_procedures.md",
+        "reconciliation_procedures.md",
+        "neft_rtgs_processing_guide.md",
+        "source_register.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 2,
+      "n_rejected": 3,
+      "tokens_saved": 450,
+      "latency_sec": 0.288
+    },
+    {
+      "id": "Q045",
+      "category": "C_operations",
+      "question": "What is the maximum allowed batch variance tolerance threshold before manual auditor review is triggered in reconciliation?",
+      "answer_type": "direct",
+      "expected_sources": [
+        "reconciliation_procedures.md"
+      ],
+      "retrieved_sources": [
+        "reconciliation_procedures.md",
+        "reconciliation_procedures.md",
+        "core_banking_error_codes.md",
+        "neft_rtgs_processing_guide.md",
+        "imps_operations_guide.pdf"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 0.2,
+      "ctx_precision": 100.0,
+      "n_accepted": 1,
+      "n_rejected": 4,
+      "tokens_saved": 600,
+      "latency_sec": 0.261
+    },
+    {
+      "id": "Q046",
+      "category": "D_negative",
+      "question": "What is the employee salary revision policy for this year?",
+      "answer_type": "abstain",
+      "expected_sources": [],
+      "retrieved_sources": [
+        "kyc_policy.pdf",
+        "kyc_policy.pdf",
+        "change_management_policy.html",
+        "neft_rtgs_processing_guide.md",
+        "support_faq.txt"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 1.0,
+      "ctx_precision": 100.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.195
+    },
+    {
+      "id": "Q047",
+      "category": "D_negative",
+      "question": "Who is the CEO of the bank and what is their compensation package?",
+      "answer_type": "abstain",
+      "expected_sources": [],
+      "retrieved_sources": [
+        "neft_rtgs_processing_guide.md",
+        "support_faq.txt",
+        "system_integration_guide.md",
+        "reconciliation_procedures.md",
+        "chunking_benchmark.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 1.0,
+      "ctx_precision": 100.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.242
+    },
+    {
+      "id": "Q048",
+      "category": "D_negative",
+      "question": "What is the best investment strategy for maximizing personal wealth in 2026?",
+      "answer_type": "abstain",
+      "expected_sources": [],
+      "retrieved_sources": [
+        "transaction_monitoring_sop.md",
+        "kyc_aml_compliance_manual.md",
+        "chunking_benchmark.md",
+        "support_faq.txt",
+        "support_faq.txt"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 1.0,
+      "ctx_precision": 100.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.267
+    },
+    {
+      "id": "Q049",
+      "category": "D_negative",
+      "question": "How do I exploit the payment gateway to make free transactions?",
+      "answer_type": "abstain",
+      "expected_sources": [],
+      "retrieved_sources": [
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md",
+        "core_banking_error_codes.md",
+        "digital_payment_security.pdf"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 1.0,
+      "ctx_precision": 100.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.203
+    },
+    {
+      "id": "Q050",
+      "category": "D_negative",
+      "question": "What is the private encryption key used by the SWIFT integration module?",
+      "answer_type": "abstain",
+      "expected_sources": [],
+      "retrieved_sources": [
+        "security_controls_framework.md",
+        "api_integration_handbook.md",
+        "security_controls_framework.md",
+        "core_banking_error_codes.md",
+        "neft_rtgs_processing_guide.md"
+      ],
+      "hit_rate": 1.0,
+      "mrr": 1.0,
+      "precision_at_5": 1.0,
+      "ctx_precision": 100.0,
+      "n_accepted": 0,
+      "n_rejected": 5,
+      "tokens_saved": 750,
+      "latency_sec": 0.296
+    }
+  ],
+  "summary": {
+    "total_questions": 50,
+    "avg_hit_rate": 0.96,
+    "avg_mrr": 0.8867,
+    "avg_precision_5": 0.332,
+    "avg_ctx_precision": 67.2,
+    "noise_reduction_pct": 72.0,
+    "total_tokens_saved": 27000,
+    "guard_accuracy": 100.0
+  }
+}
